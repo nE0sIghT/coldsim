@@ -1,0 +1,344 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR nE0sIghT
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ColdSim 1.0\n"
+"Report-Msgid-Bugs-To: http://bugs.coldzone.ru\n"
+"POT-Creation-Date: 2010-07-09 17:53+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gui/coldsim.glade:3350
+msgid " Crystal ("
+msgstr " Кристалл ("
+
+#: ../gui/coldsim.glade:2946 ../gui/coldsim.glade:3044
+#: ../gui/coldsim.glade:3142 ../gui/coldsim.glade:3218
+msgid " Crystal and "
+msgstr " Кристалл и "
+
+#: ../gui/coldsim.glade:3163 ../gui/coldsim.glade:3239
+msgid " Deuterium"
+msgstr " Дейтерий"
+
+#: ../gui/coldsim.glade:2967
+msgid " Deuterium ("
+msgstr " Дейтерий ("
+
+#: ../gui/coldsim.glade:3065
+msgid " Deuterium ~ "
+msgstr " Дейтерий ~ "
+
+#: ../gui/coldsim.glade:3087
+msgid " Large Cargo"
+msgstr " Большой Транспорт"
+
+#: ../gui/coldsim.glade:3305
+msgid " Metal ("
+msgstr " Металл ("
+
+#: ../gui/coldsim.glade:2924 ../gui/coldsim.glade:3022
+#: ../gui/coldsim.glade:3120 ../gui/coldsim.glade:3196
+msgid " Metal, "
+msgstr " Металл, "
+
+#: ../gui/coldsim.glade:3395
+msgid " Recycler"
+msgstr " Переработчик"
+
+#: ../gui/coldsim.glade:2873
+msgid " after ~"
+msgstr " после ~"
+
+#: ../gui/coldsim.glade:2893
+msgid " rounds"
+msgstr " раундов"
+
+#: ../gui/coldsim.glade:2989
+msgid "% Booty)"
+msgstr "% Загрузки"
+
+#: ../gui/coldsim.glade:2803 ../gui/coldsim.glade:2833
+#: ../gui/coldsim.glade:2863
+msgid "%) |"
+msgstr "%) |"
+
+#: ../gui/coldsim.glade:2203
+msgid "<b>Defence</b>"
+msgstr "<b>Оборона</b>"
+
+#: ../gui/coldsim.glade:1493
+msgid "<b>Fleet</b>"
+msgstr "<b>Флот</b>"
+
+#: ../gui/coldsim.glade:2678
+msgid "<b>Options</b>"
+msgstr "<b>Опции</b>"
+
+#: ../gui/coldsim.glade:3423
+msgid "<b>Result</b>"
+msgstr "<b>Результат</b>"
+
+#: ../gui/coldsim.glade:2618
+msgid "<b>Technologies and officers</b>"
+msgstr "<b>Технологии и офицеры</b>"
+
+#: ../gui/coldsim.glade:86
+msgid "ACS slot:"
+msgstr "Слотов САБ:"
+
+#: ../gui/coldsim.glade:2312
+msgid "Admiral"
+msgstr "Адмирал"
+
+#: ../gui/coldsim.glade:2300
+msgid ""
+"Armour\n"
+"Technology"
+msgstr ""
+"Броня\n"
+"технология"
+
+#: ../gui/coldsim.glade:298 ../gui/coldsim.glade:2263
+msgid "Attacker"
+msgstr "Атакующий"
+
+#: ../gui/coldsim.glade:200
+msgid "Battleship"
+msgstr "Линкор"
+
+#: ../gui/coldsim.glade:240
+msgid "Bomber"
+msgstr "Бомбардировщик"
+
+#: ../gui/coldsim.glade:3883
+msgid "Check update"
+msgstr "Проверить обновление"
+
+#: ../gui/coldsim.glade:3451
+msgid "Check updates"
+msgstr "Проверить обновление"
+
+#: ../gui/coldsim.glade:7
+msgid "ColdSim"
+msgstr "ColdSim"
+
+#: ../gui/coldsim.glade:210
+msgid "Colonizer"
+msgstr "Колонизатор"
+
+#: ../gui/coldsim.glade:2515
+msgid ""
+"Combustion\n"
+"Drive"
+msgstr ""
+"Ракетный\n"
+"двигатель"
+
+#: ../gui/coldsim.glade:3896
+msgid "Coming soon"
+msgstr "Скоро"
+
+#: ../gui/coldsim.glade:190
+msgid "Cruiser"
+msgstr "Крейсер"
+
+#: ../gui/coldsim.glade:270
+msgid "Death Star"
+msgstr "Звезда Смерти"
+
+#: ../gui/coldsim.glade:2708
+msgid "Debris Field"
+msgstr "Поле Обломков"
+
+#: ../gui/coldsim.glade:321 ../gui/coldsim.glade:2159
+#: ../gui/coldsim.glade:2249
+msgid "Defender"
+msgstr "Обороняющийся"
+
+#: ../gui/coldsim.glade:260
+msgid "Destroyer"
+msgstr "Уничтожитель"
+
+#: ../gui/coldsim.glade:2496
+msgid "Drive Technologies"
+msgstr "Технологии двигателей"
+
+#: ../gui/coldsim.glade:230
+msgid "Espionage Probe"
+msgstr "Шпионский Зонд"
+
+#: ../gui/coldsim.glade:3479
+msgid "Exit"
+msgstr "Выход"
+
+#: ../gui/coldsim.glade:3517
+msgid "Free Cold Zone battle simulator"
+msgstr "Бесплатный симулятор боя Cold Zone"
+
+#: ../gui/coldsim.glade:1562
+msgid "Gauss Cannon"
+msgstr "Пушка Гаусса"
+
+#: ../gui/coldsim.glade:180
+msgid "Heavy Fighter"
+msgstr "Тяжелый истребитель"
+
+#: ../gui/coldsim.glade:1552
+msgid "Heavy Laser"
+msgstr "Тяжелый лазер"
+
+#: ../gui/coldsim.glade:2535
+msgid ""
+"Hyperspace\n"
+"Drive"
+msgstr ""
+"Гиперпространственный\n"
+"Двигатель"
+
+#: ../gui/coldsim.glade:1611
+msgid "IP-/Anti-Ballistic missiles"
+msgstr "МПР/Перехватчики"
+
+#: ../gui/coldsim.glade:2523
+msgid ""
+"Impulse\n"
+"Drive"
+msgstr "Импульсный\n"
+"Двигатель"
+
+#: ../gui/coldsim.glade:1572
+msgid "Ion Cannon"
+msgstr "Ионная пушка"
+
+#: ../gui/coldsim.glade:1602
+msgid "Large Shield Dome"
+msgstr "Большой Щитовой Купол"
+
+#: ../gui/coldsim.glade:160
+msgid "Large cargo"
+msgstr "Большой Транспорт"
+
+#: ../gui/coldsim.glade:170
+msgid "Light Fighter"
+msgstr "Легкий Истребитель"
+
+#: ../gui/coldsim.glade:1542
+msgid "Light Laser"
+msgstr "Легкий лазер"
+
+#: ../gui/coldsim.glade:280
+msgid "Linecruiser"
+msgstr "Линейный крейсер"
+
+#: ../gui/coldsim.glade:2730
+msgid "Losses Attacker"
+msgstr "Потери атакующего"
+
+#: ../gui/coldsim.glade:2741
+msgid "Losses Defender"
+msgstr "Потери обороняющегося"
+
+#: ../gui/coldsim.glade:2719
+msgid "Moon chance"
+msgstr "Шанс возникновения луны"
+
+#: ../gui/coldsim.glade:2647
+msgid "Number of simulations"
+msgstr "Количество симуляций"
+
+#: ../gui/coldsim.glade:3908
+msgid "OK"
+msgstr "ОК"
+
+#: ../gui/coldsim.glade:1582
+msgid "Plasma Turret"
+msgstr "Плазменное орудие"
+
+#: ../gui/coldsim.glade:2149
+msgid "Prime Target"
+msgstr "Главная цель"
+
+#: ../gui/coldsim.glade:2763
+msgid "Real Plunder"
+msgstr "Добыча"
+
+#: ../gui/coldsim.glade:220
+msgid "Recycler"
+msgstr "Переработчик"
+
+#: ../gui/coldsim.glade:2774
+msgid "Result"
+msgstr "Результат"
+
+#: ../gui/coldsim.glade:1532
+msgid "Rocket Launcher"
+msgstr "Ракетная Установка"
+
+#: ../gui/coldsim.glade:2288
+msgid ""
+"Shielding\n"
+"Technology"
+msgstr ""
+"Щитовая\n"
+"технология"
+
+#: ../gui/coldsim.glade:3465
+msgid "Simulate"
+msgstr "Симулировать"
+
+#: ../gui/coldsim.glade:2179
+msgid "Simulate missiles attack"
+msgstr "Симулировать атаку ракетами"
+
+#: ../gui/coldsim.glade:1592
+msgid "Small Shield Dome"
+msgstr "Малый щитовой купол"
+
+#: ../gui/coldsim.glade:149
+msgid "Small cargo"
+msgstr "Маленький транспорт"
+
+#: ../gui/coldsim.glade:250
+msgid "Solar Satellite"
+msgstr "Солнечный спутник"
+
+#: ../gui/coldsim.glade:2752
+msgid "Theoretic Plunder\t"
+msgstr "Возможная добыча"
+
+#: ../gui/coldsim.glade:2276
+msgid ""
+"Weapon\n"
+"Technology"
+msgstr ""
+"Оружейная\n"
+"Технология"
+
+#: ../gui/coldsim.glade:20
+msgid "_File"
+msgstr "_Файл"
+
+#: ../gui/coldsim.glade:41
+msgid "_Help"
+msgstr "_Помощь"
+
+#: ../gui/coldsim.glade:2783
+msgid "| Attacker wins ("
+msgstr "| Выигрыш атакующего ("
+
+#: ../gui/coldsim.glade:2813
+msgid "| Defender wins ("
+msgstr "| Выирыш обороняющегося ("
+
+#: ../gui/coldsim.glade:2843
+msgid "| Draw ("
+msgstr "| Ничья ("
