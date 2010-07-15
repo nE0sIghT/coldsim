@@ -189,6 +189,20 @@ class coldsim
 
 		$this->clear_results();
 
+		$debris = array(
+			'metal'		=> array(),
+			'crystal'	=> array(),
+			'total'		=> array(
+				BATTLE_FLEET_ATTACKER	=> array(
+					'metal'		=> array(),
+					'crystal'	=> array(),
+				),
+				BATTLE_FLEET_DEFENDER	=> array(
+					'metal'		=> array(),
+					'crystal'	=> array(),
+				),
+			),
+		);
 		$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 		for($i = 0; $i < $this->simulations; $i++)
 		{
@@ -196,10 +210,6 @@ class coldsim
 
 			for($fleet_type = BATTLE_FLEET_ATTACKER; $fleet_type != BATTLE_DRAW; $fleet_type = ($fleet_type == BATTLE_FLEET_ATTACKER ? BATTLE_FLEET_DEFENDER : BATTLE_DRAW))
 			{
-				if(!isset($battle->fleet[$fleet_type]))
-				{
-					print_r($battle->fleet);
-				}
 				if($battle->fleet[$fleet_type])
 				{
 					foreach($battle->fleet[$fleet_type] as $acs_slot => $ships)
@@ -214,6 +224,13 @@ class coldsim
 
 			$this->results['battle'][$battle->winner]++;
 			$this->results['rounds'][] = $battle->round + 1;
+                                             
+			$debris['metal'][] = $battle->debris['metal'];
+			$debris['crystal'][] = $battle->debris['crystal'];
+			$debris['total'][BATTLE_FLEET_ATTACKER]['metal'][] = $battle->debris['total'][BATTLE_FLEET_ATTACKER]['metal'];
+			$debris['total'][BATTLE_FLEET_ATTACKER]['crystal'][] = $battle->debris['total'][BATTLE_FLEET_ATTACKER]['crystal'];
+			$debris['total'][BATTLE_FLEET_DEFENDER]['metal'][] = $battle->debris['total'][BATTLE_FLEET_DEFENDER]['metal'];
+			$debris['total'][BATTLE_FLEET_DEFENDER]['crystal'][] = $battle->debris['total'][BATTLE_FLEET_DEFENDER]['crystal'];
 		}
 		$this->show_ships_results();
 
@@ -266,15 +283,18 @@ class coldsim
 
 		$this->glade->get_widget("moon_chance")->set_text(round($battle->moon_chance));
 
-		$this->glade->get_widget("debris_metal")->set_text($battle->debris['metal']);
-		$this->glade->get_widget("debris_crystal")->set_text($battle->debris['crystal']);
-		$this->glade->get_widget("debris_recyclers")->set_text(ceil(($battle->debris['metal'] + $battle->debris['crystal']) / $pricelist[SHIP_RECYCLER]['capacity']));
+		$debris_metal = round(array_sum($debris['metal'])/sizeof($debris['metal']));
+		$debris_crystal = round(array_sum($debris['crystal'])/sizeof($debris['crystal']));
 
-		$this->glade->get_widget("lose_a_metal")->set_text($battle->debris['total'][BATTLE_FLEET_ATTACKER]['metal']);
-		$this->glade->get_widget("lose_a_crystal")->set_text($battle->debris['total'][BATTLE_FLEET_ATTACKER]['crystal']);
+		$this->glade->get_widget("debris_metal")->set_text($debris_metal);
+		$this->glade->get_widget("debris_crystal")->set_text($debris_crystal);
+		$this->glade->get_widget("debris_recyclers")->set_text(ceil(($debris_metal + $debris_crystal) / $pricelist[SHIP_RECYCLER]['capacity']));
 
-		$this->glade->get_widget("lose_d_metal")->set_text($battle->debris['total'][BATTLE_FLEET_DEFENDER]['metal']);
-		$this->glade->get_widget("lose_d_crystal")->set_text($battle->debris['total'][BATTLE_FLEET_DEFENDER]['crystal']);
+		$this->glade->get_widget("lose_a_metal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])));
+		$this->glade->get_widget("lose_a_crystal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])));
+
+		$this->glade->get_widget("lose_d_metal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])));
+		$this->glade->get_widget("lose_d_crystal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
 	}
 
 	function show_ships_results()
@@ -335,6 +355,11 @@ class coldsim
 				}
 			}
 		}
+	}
+
+	function select_region($object)
+	{
+		$object->select_region(0, -1);
 	}
 
 	function update_check()
