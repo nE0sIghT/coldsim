@@ -1,10 +1,11 @@
 <?php
 /**
- * vars.php
- *
- * @copyright nE0sIghT for Cold Zone http://coldzone.ru
- * @license GNU Affero General Public License, version 3 http://www.gnu.org/licenses/agpl-3.0.html
- */
+*
+* @package ColdSim
+* @copyright (c) 2010 nE0sIghT
+* @license GNU Affero General Public License, version 3 http://www.gnu.org/licenses/agpl-3.0.html
+*
+*/
 
 if (!defined('IN_GAME'))
 {
