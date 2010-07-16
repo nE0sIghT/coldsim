@@ -25,6 +25,15 @@ if (!class_exists('gtk'))
         die("Please load the php-gtk2 module in your php.ini\n");
 }
 
+if(!WIN_HOST)
+{
+	if(getenv('LANG') && strpos(getenv('LANG'), '.') && function_exists('ini_set'))
+	{
+		list(, $encoding) = explode('.', getenv('LANG'));
+		ini_set('php-gtk.codepage', $encoding);
+	}
+}
+
 $root_path = get_root_path();
 
 require($root_path . "lib/coldzone/vars.php");

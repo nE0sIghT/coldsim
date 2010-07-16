@@ -28,11 +28,14 @@ class coldsim
 	private $simulations	= 20;
 	private $results;
 	private $prime_target	= 0;
+	private $spy_buffer;
 
 	function __construct($object)
 	{
 		$this->glade = &$object;
 		$this->glade->get_widget('acs_combobox')->set_active(0);
+		$this->spy_buffer = new GtkTextBuffer();
+		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
 
 		$this->clear_results();
 	}
@@ -330,6 +333,45 @@ class coldsim
 	{
 		list(,, $this->prime_target) = explode('_', $object->name);
 		$this->prime_target = (int) $this->prime_target;
+	}
+
+	function import_spy_report()
+	{
+		$matches = array();
+		if(preg_match("/доклад с (.+) \[(\d):(\d{1,3}):(\d{1,2})\]/Uui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		{
+			$this->glade->get_widget('target_name')->set_text($matches[1]);
+			$this->glade->get_widget('target_galaxy')->set_text((int) $matches[2]);
+			$this->glade->get_widget('target_system')->set_text((int) $matches[3]);
+			$this->glade->get_widget('target_planet')->set_text((int) $matches[4]);
+		}
+
+		if(preg_match("/Металл\s+([\d\.]+)\s+Кристалл\s+([\d\.]+)[\s\n+]Дейтерий\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		{
+			$this->glade->get_widget('target_metal')->set_text((int) str_replace('.', '', $matches[1]));
+			$this->glade->get_widget('target_crystal')->set_text((int) str_replace('.', '', $matches[2]));
+			$this->glade->get_widget('target_deuterium')->set_text((int) str_replace('.', '', $matches[3]));
+		}
+
+		if(preg_match("/Оружейная технология\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		{
+			$this->glade->get_widget('addition_d_' . TECH_MILITARY)->set_text((int) $matches[1]);
+		}
+
+		if(preg_match("/Щитовая технология\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		{
+			$this->glade->get_widget('addition_d_' . TECH_SHIELD)->set_text((int) $matches[1]);
+		}
+
+		if(preg_match("/Броня космических кораблей\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		{
+			$this->glade->get_widget('addition_d_' . TECH_DEFENCE)->set_text((int) $matches[1]);
+		}
+
+		if(preg_match("/Адмирал\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		{
+			$this->glade->get_widget('addition_d_' . RPG_ADMIRAL)->set_text((int) $matches[1]);
+		}
 	}
 
 	function show_ships_results()
