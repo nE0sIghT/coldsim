@@ -304,7 +304,7 @@ class coldsim
 		foreach($reslist['fleet'] as $element)
 		{
 			$counts = isset($this->results['ships'][BATTLE_FLEET_ATTACKER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_ATTACKER][$this->acs_slot]['ships'][$element] : array();
-			$count = sizeof($counts) ? floor(array_sum($counts)/sizeof($counts)) : 0;
+			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), 1) : 0;
 
 			if($this->glade->get_widget("label_a_$element"))
 			{
@@ -312,7 +312,7 @@ class coldsim
 			}
 
 			$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
-			$count = sizeof($counts) ? floor(array_sum($counts)/sizeof($counts)) : 0;
+			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), 1) : 0;
 
 			if($this->glade->get_widget("label_d_$element"))
 			{
@@ -323,7 +323,7 @@ class coldsim
 		foreach($reslist['defense'] as $element)
 		{
 			$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
-			$count = sizeof($counts) ? floor(array_sum($counts)/sizeof($counts)) : 0;
+			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), 1) : 0;
 
 			if($this->glade->get_widget("label_d_$element"))
 			{
