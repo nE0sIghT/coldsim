@@ -244,13 +244,141 @@ class coldsim
 			$this->glade->get_widget("label_r_a_postfix")->set_visible(true);
 			$this->glade->get_widget("label_r_a_percent")->set_visible(true);
 			$this->glade->get_widget("label_r_a_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_ATTACKER]/$this->simulations) * 100);
+
+			$plunder_metal = (int) $this->glade->get_widget("target_metal")->get_text();
+			$plunder_crystal = (int) $this->glade->get_widget("target_crystal")->get_text();
+			$plunder_deuterium = (int) $this->glade->get_widget("target_deuterium")->get_text();
+			
+			$this->glade->get_widget("plunder_t_metal")->set_text(floor($plunder_metal / 2));
+			$this->glade->get_widget("plunder_t_crystal")->set_text(floor($plunder_crystal / 2));
+			$this->glade->get_widget("plunder_t_deuterium")->set_text(floor($plunder_deuterium / 2));
+			$this->glade->get_widget("plunder_t_cargo")->set_text(ceil((floor($plunder_metal / 2) + floor($plunder_crystal / 2) + floor($plunder_deuterium / 2)) / $pricelist[SHIP_TRANSPORT_BIG]['capacity']));
+
+			foreach ($this->results['ships'][BATTLE_FLEET_ATTACKER] as $fleet_id => $ships)
+			{
+				$this->results['max_resources'][$fleet_id] = 0;
+				$this->results['steal'][$fleet_id] = array('metal' => 0, 'crystal' => 0, 'deuterium' => 0);
+
+				foreach($ships['ships'] as $element => $counts)
+				{
+					$count = sizeof($counts) ? (int) round(array_sum($counts)/sizeof($counts), 1) : 0;
+					$this->results['max_resources'][$fleet_id] += (int) ($pricelist[$element]['capacity'] * $count);
+				}
+				$this->results['max_resources']['total'] += $this->results['max_resources'][$fleet_id];
+			}
+
+			// Calculate new fleet maximum resources for base attacker
+			if($this->results['max_resources']['total'])
+			{
+				foreach ($this->results['max_resources'] as $fleet_id => $capacity)
+				{
+					if($fleet_id === 'total' || !$capacity)
+					{
+						continue;
+					}
+
+					$resource_percent = $capacity / $this->results['max_resources']['total'];
+					
+					$metal   = floor(($resource_percent * $plunder_metal) / 2);
+					$crystal = floor(($resource_percent * $plunder_crystal) / 2);
+					$deuter  = floor(($resource_percent * $plunder_deuterium) / 2);
+
+					if ($metal > round($capacity / 3))
+					{
+						$this->results['steal'][$fleet_id]['metal'] = round($capacity / 3);
+						$capacity  = $capacity - $this->results['steal'][$fleet_id]['metal'];
+					}
+					else
+					{
+						$this->results['steal'][$fleet_id]['metal'] 	= $metal;
+						$capacity	-= $this->results['steal'][$fleet_id]['metal'];
+					}
+					$metal -= $this->results['steal'][$fleet_id]['metal'];
+					
+					if ($crystal > round($capacity / 2))
+					{
+						$this->results['steal'][$fleet_id]['crystal']	= round($capacity / 2);
+						$capacity	-= $this->results['steal'][$fleet_id]['crystal'];
+					}
+					else
+					{
+						$this->results['steal'][$fleet_id]['crystal'] 	= $crystal;
+						$capacity   	-= $this->results['steal'][$fleet_id]['crystal'];
+					}
+					$crystal -= $this->results['steal'][$fleet_id]['crystal'];
+					
+					if ($deuter > $capacity)
+					{
+						$this->results['steal'][$fleet_id]['deuterium']	= $capacity;
+						$capacity	-= $this->results['steal'][$fleet_id]['deuterium'];
+					}
+					else
+					{
+						$this->results['steal'][$fleet_id]['deuterium']	= $deuter;
+						$capacity	-= $this->results['steal'][$fleet_id]['deuterium'];
+					}
+					$deuter -= $this->results['steal'][$fleet_id]['deuterium'];
+					
+					if($capacity > 0)
+					{
+						if ($metal > round($capacity/2))
+						{
+							$this->results['steal'][$fleet_id]['metal'] += round($capacity/2);
+							$metal -= round($capacity/2);
+							$capacity  = round($capacity/2);
+						}
+						else
+						{
+							$this->results['steal'][$fleet_id]['metal'] 	+= $metal;
+							$capacity	-= $metal;
+							$metal = 0;
+							
+							if ($crystal > $capacity)
+							{
+								$this->results['steal'][$fleet_id]['crystal']	+= $capacity;
+								$crystal -= $capacity;
+								$capacity	= 0;
+							}
+							else
+							{
+								$this->results['steal'][$fleet_id]['crystal'] 	+= $crystal;
+								$capacity   	-= $crystal;
+							}
+						}
+					}
+					
+					$this->results['steal'][$fleet_id] = array_map('round', $this->results['steal'][$fleet_id]);
+					
+					$this->results['steal']['total']['metal'] += $this->results['steal'][$fleet_id]['metal'];
+					$this->results['steal']['total']['crystal'] += $this->results['steal'][$fleet_id]['crystal'];
+					$this->results['steal']['total']['deuterium'] += $this->results['steal'][$fleet_id]['deuterium'];
+					
+					$this->results['steal'][$fleet_id]['metal'] = (string)sprintf('%.0f', floor($this->results['steal'][$fleet_id]['metal']));
+					$this->results['steal'][$fleet_id]['crystal'] = (string)sprintf('%.0f', floor($this->results['steal'][$fleet_id]['crystal']));
+					$this->results['steal'][$fleet_id]['deuterium'] = (string)sprintf('%.0f', floor($this->results['steal'][$fleet_id]['deuterium']));
+				}
+				$this->results['steal']['total']['metal'] = (string)sprintf('%.0f', floor($this->results['steal']['total']['metal']));
+				$this->results['steal']['total']['crystal'] = (string)sprintf('%.0f', floor($this->results['steal']['total']['crystal']));
+				$this->results['steal']['total']['deuterium'] = (string)sprintf('%.0f', floor($this->results['steal']['total']['deuterium']));
+			}
 		}
 		else
 		{
 			$this->glade->get_widget("label_r_a_prefix")->set_visible(false);
 			$this->glade->get_widget("label_r_a_postfix")->set_visible(false);
 			$this->glade->get_widget("label_r_a_percent")->set_visible(false);
+
+			$this->glade->get_widget("plunder_t_metal")->set_text(0);
+			$this->glade->get_widget("plunder_t_crystal")->set_text(0);
+			$this->glade->get_widget("plunder_t_deuterium")->set_text(0);
+			$this->glade->get_widget("plunder_t_cargo")->set_text(0);
 		}
+
+		$this->glade->get_widget("plunder_r_metal")->set_text($this->results['steal'][$this->acs_slot]['metal']);
+		$this->glade->get_widget("plunder_r_crystal")->set_text($this->results['steal'][$this->acs_slot]['crystal']);
+		$this->glade->get_widget("plunder_r_deuterium")->set_text($this->results['steal'][$this->acs_slot]['deuterium']);
+
+		$this->glade->get_widget("plunder_r_boot")->set_text(($plunder_metal + $plunder_crystal + $plunder_deuterium) ? round((($this->results['steal'][$this->acs_slot]['metal'] + $this->results['steal'][$this->acs_slot]['crystal'] + $this->results['steal'][$this->acs_slot]['deuterium']) / ($plunder_metal + $plunder_crystal + $plunder_deuterium) * 2) * 100, 1) : 0);
 
 		if($this->results['battle'][BATTLE_FLEET_DEFENDER])
 		{
@@ -299,15 +427,6 @@ class coldsim
 
 		$this->glade->get_widget("lose_d_metal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])));
 		$this->glade->get_widget("lose_d_crystal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
-
-		$plunder_metal = (int) $this->glade->get_widget("target_metal")->get_text();
-		$plunder_crystal = (int) $this->glade->get_widget("target_crystal")->get_text();
-		$plunder_deuterium = (int) $this->glade->get_widget("target_deuterium")->get_text();
-		
-		$this->glade->get_widget("plunder_t_metal")->set_text(floor($plunder_metal / 2));
-		$this->glade->get_widget("plunder_t_crystal")->set_text(floor($plunder_crystal / 2));
-		$this->glade->get_widget("plunder_t_deuterium")->set_text(floor($plunder_deuterium / 2));
-		$this->glade->get_widget("plunder_t_cargo")->set_text(ceil((floor($plunder_metal / 2) + floor($plunder_crystal / 2) + floor($plunder_deuterium / 2)) / $pricelist[SHIP_TRANSPORT_BIG]['capacity']));
 	}
 
 	function simulate_missile_attack()
@@ -460,6 +579,8 @@ class coldsim
 				BATTLE_DRAW		=> 0,
 			),
 			'rounds'	=> array(),
+			'steal'		=> array('total' => array('metal' => 0, 'crystal' => 0, 'deuterium' => 0)),
+			'max_resources'	=> array('total' => 0),
 		);
 
 		for($fleet_type = BATTLE_FLEET_ATTACKER; $fleet_type != BATTLE_DRAW; $fleet_type = ($fleet_type == BATTLE_FLEET_ATTACKER ? BATTLE_FLEET_DEFENDER : BATTLE_DRAW))
