@@ -299,6 +299,15 @@ class coldsim
 
 		$this->glade->get_widget("lose_d_metal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])));
 		$this->glade->get_widget("lose_d_crystal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
+
+		$plunder_metal = (int) $this->glade->get_widget("target_metal")->get_text();
+		$plunder_crystal = (int) $this->glade->get_widget("target_crystal")->get_text();
+		$plunder_deuterium = (int) $this->glade->get_widget("target_deuterium")->get_text();
+		
+		$this->glade->get_widget("plunder_t_metal")->set_text(floor($plunder_metal / 2));
+		$this->glade->get_widget("plunder_t_crystal")->set_text(floor($plunder_crystal / 2));
+		$this->glade->get_widget("plunder_t_deuterium")->set_text(floor($plunder_deuterium / 2));
+		$this->glade->get_widget("plunder_t_cargo")->set_text(ceil((floor($plunder_metal / 2) + floor($plunder_crystal / 2) + floor($plunder_deuterium / 2)) / $pricelist[SHIP_TRANSPORT_BIG]['capacity']));
 	}
 
 	function simulate_missile_attack()

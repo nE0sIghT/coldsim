@@ -2373,6 +2373,8 @@
                                         <property name="max_length">2</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">2</property>
+                                        <property name="xalign">1</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2396,6 +2398,8 @@
                                         <property name="max_length">3</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">3</property>
+                                        <property name="xalign">1</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2419,6 +2423,8 @@
                                         <property name="max_length">2</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">2</property>
+                                        <property name="xalign">1</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2444,7 +2450,9 @@
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">4</property>
                                         <property name="text">20</property>
+                                        <property name="xalign">1</property>
                                         <property name="truncate_multiline">True</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -3095,6 +3103,8 @@
                                         <property name="max_length">2</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">2</property>
+                                        <property name="xalign">1</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -3118,6 +3128,8 @@
                                         <property name="max_length">3</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">3</property>
+                                        <property name="xalign">1</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -3141,6 +3153,8 @@
                                         <property name="max_length">2</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                         <property name="width_chars">2</property>
+                                        <property name="xalign">1</property>
+                                        <signal name="button_release_event" handler="select_region"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -3355,7 +3369,7 @@
                             <child>
                               <widget class="GtkTable" id="table8">
                                 <property name="visible">True</property>
-                                <property name="n_rows">8</property>
+                                <property name="n_rows">9</property>
                                 <property name="n_columns">2</property>
                                 <property name="column_spacing">4</property>
                                 <child>
@@ -3748,7 +3762,7 @@
                                       <widget class="GtkLabel" id="label74">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x411;&#x43E;&#x43B;&#x44C;&#x448;&#x438;&#x445; &#x442;&#x440;&#x430;&#x43D;&#x441;&#x43F;&#x43E;&#x440;&#x442;&#x43E;&#x432;</property>
+                                        <property name="label" translatable="yes"> &#x411;&#x422;</property>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -4068,10 +4082,136 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <placeholder/>
+                                  <widget class="GtkLabel" id="label83">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">&#x422;&#x43E;&#x43F;&#x43B;&#x438;&#x432;&#x43E;</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">7</property>
+                                    <property name="bottom_attach">8</property>
+                                  </packing>
                                 </child>
                                 <child>
-                                  <placeholder/>
+                                  <widget class="GtkLabel" id="label84">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">&#x412;&#x440;&#x435;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x435;&#x442;&#x430;</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">8</property>
+                                    <property name="bottom_attach">9</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox3">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <widget class="GtkLabel" id="fleet_deuterium">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label">0</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label85">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label"> &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F;</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">7</property>
+                                    <property name="bottom_attach">8</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox12">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <widget class="GtkLabel" id="fleet_hours">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes">00</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label87">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes">:</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="fleet_minutes">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes">00</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label89">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes">:</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="fleet_seconds">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes">00</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">4</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label91">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="label" translatable="yes"> &#x447;&#x430;&#x441;&#x43E;&#x432;</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">5</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">8</property>
+                                    <property name="bottom_attach">9</property>
+                                  </packing>
                                 </child>
                               </widget>
                             </child>
