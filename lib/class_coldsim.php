@@ -27,6 +27,7 @@ class coldsim
 	);
 	private $simulations	= 20;
 	private $results;
+	private $prime_target	= 0;
 
 	function __construct($object)
 	{
@@ -295,6 +296,40 @@ class coldsim
 
 		$this->glade->get_widget("lose_d_metal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])));
 		$this->glade->get_widget("lose_d_crystal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
+	}
+
+	function simulate_missile_attack()
+	{
+		global $reslist;
+
+		$source = $target = array();
+
+		foreach($reslist['defense'] as $element)
+		{
+			if($element == MISSILE_INTERPLANETARY)
+				continue;
+
+			$target[$element] = (int) $this->glade->get_widget("defense_$element")->get_text();
+		}
+		$source[MISSILE_INTERPLANETARY] = (int) $this->glade->get_widget("missile_" . MISSILE_INTERPLANETARY)->get_text();
+		$source[TECH_MILITARY] = (int) $this->glade->get_widget("addition_a_" . TECH_MILITARY)->get_text();
+		$target[TECH_DEFENCE] = (int) $this->glade->get_widget("addition_d_" . TECH_DEFENCE)->get_text();
+
+		list($source, $target) = missiles_attack($source, $target, $this->prime_target);
+
+		foreach($reslist['defense'] as $element)
+		{
+			if($element == MISSILE_INTERPLANETARY)
+				continue;
+
+			$this->glade->get_widget("label_d_$element")->set_text((int) $target[$element]);
+		}
+	}
+
+	function change_prime_target($object)
+	{
+		list(,, $this->prime_target) = explode('_', $object->name);
+		$this->prime_target = (int) $this->prime_target;
 	}
 
 	function show_ships_results()
