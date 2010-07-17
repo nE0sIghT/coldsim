@@ -204,6 +204,43 @@ class coldsim
 		}
 	}
 
+	function clear_attacker()
+	{
+		global $reslist;
+
+		foreach($reslist['fleet'] as $element)
+		{
+			if($this->glade->get_widget("ship_a_$element"))
+			{
+				$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['fleet'][$element] = 0;
+				$this->glade->get_widget("ship_a_$element")->set_text(0);
+			}
+		}
+	}
+
+	function clear_defender()
+	{
+		global $reslist;
+
+		foreach($reslist['fleet'] as $element)
+		{
+			if($this->glade->get_widget("ship_d_$element"))
+			{
+				$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['fleet'][$element] = 0;
+				$this->glade->get_widget("ship_d_$element")->set_text(0);
+			}
+		}
+
+		foreach($reslist['defense'] as $element)
+		{
+			if($this->glade->get_widget("defense_$element"))
+			{
+				$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['fleet'][$element] = 0;
+				$this->glade->get_widget("defense_$element")->set_text(0);
+			}
+		}
+	}
+
 	function simulate()
 	{
 		global $pricelist, $resource;

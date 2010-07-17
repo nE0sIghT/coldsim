@@ -1496,6 +1496,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <signal name="released" handler="clear_attacker"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1543,6 +1544,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <signal name="released" handler="clear_defender"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
