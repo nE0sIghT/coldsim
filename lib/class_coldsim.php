@@ -21,6 +21,7 @@ class coldsim
 {
 	private $glade		= null;
 	private $acs_slot	= 0;
+	private $fleet_factor	= 1;
 	private $fleets		= array(
 		BATTLE_FLEET_ATTACKER		=> array(),
 		BATTLE_FLEET_DEFENDER		=> array(),
@@ -34,17 +35,27 @@ class coldsim
 	{
 		$this->glade = &$object;
 		$this->glade->get_widget('acs_combobox')->set_active(0);
+		$this->glade->get_widget('fleet_factor')->set_active(0);
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
 
 		$this->clear_results();
 	}
 
-	function acs_changed($acs_combo, $params = array())
+	function acs_changed($acs_combo)
 	{
 		$this->store_current_acs();
 		$this->acs_slot = (int) $acs_combo->get_active();
 		$this->show_ships_results();
+	}
+
+	function fleet_factor_changed($fleet_factor_combo)
+	{
+		$factors = array(
+			0	=> 1,
+			1	=> 1.5,
+		);
+		$this->fleet_factor = $factors[$fleet_factor_combo->get_active()];
 	}
 
 	function store_current_acs()
@@ -100,7 +111,7 @@ class coldsim
 			}
 		}
 
-		$additions = array(TECH_MILITARY, TECH_SHIELD, TECH_DEFENCE, RPG_ADMIRAL);
+		$additions = array(TECH_MILITARY, TECH_SHIELD, TECH_DEFENCE, TECH_COMBUSTION, TECH_IMPULSE_DRIVE, TECH_HYPERSPACE_DRIVE, RPG_ADMIRAL, RPG_GENERAL, RPG_AIDEDECAMP);
 		foreach($additions as $element)
 		{
 			if($this->glade->get_widget("addition_a_$element"))
@@ -185,7 +196,7 @@ class coldsim
 
 	function simulate()
 	{
-		global $pricelist;
+		global $pricelist, $resource;
 
 		$this->store_current_acs();
 		$this->simulations = max(1, (int) $this->glade->get_widget("entry_simulations")->get_text());
@@ -206,6 +217,34 @@ class coldsim
 				),
 			),
 		);
+
+		$source = array(
+			TECH_COMBUSTION		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[TECH_COMBUSTION]],
+			TECH_IMPULSE_DRIVE	=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[TECH_IMPULSE_DRIVE]],
+			TECH_HYPERSPACE_DRIVE	=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[TECH_HYPERSPACE_DRIVE]],
+			RPG_GENERAL		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[RPG_GENERAL]],
+			RPG_AIDEDECAMP		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[RPG_AIDEDECAMP]],
+		);
+		$fleet_speed = get_fleet_speed($this->fleets[BATTLE_FLEET_ATTACKER][0]['fleet'], $source);
+		$distance = get_distance(
+			(int) $this->glade->get_widget("source_galaxy")->get_text(),
+			(int) $this->glade->get_widget("target_galaxy")->get_text(),
+			(int) $this->glade->get_widget("source_system")->get_text(),
+			(int) $this->glade->get_widget("target_system")->get_text(),
+			(int) $this->glade->get_widget("source_planet")->get_text(),
+			(int) $this->glade->get_widget("target_planet")->get_text()
+		);
+		$duration = get_duration($fleet_speed, $distance);
+		$consumption = get_fleet_consumption ($this->fleets[BATTLE_FLEET_ATTACKER][0]['fleet'], $source, $duration, $distance, $fleet_speed);
+
+		$duration = max(1, round($duration / $this->fleet_factor));
+		list($fleet_hours, $fleet_minutes, $fleet_seconds) = secs2time($duration);
+
+		$this->glade->get_widget("fleet_deuterium")->set_text($consumption);
+		$this->glade->get_widget("fleet_hours")->set_text($fleet_hours);
+		$this->glade->get_widget("fleet_minutes")->set_text($fleet_minutes);
+		$this->glade->get_widget("fleet_seconds")->set_text($fleet_seconds);
+		
 		$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 		for($i = 0; $i < $this->simulations; $i++)
 		{
