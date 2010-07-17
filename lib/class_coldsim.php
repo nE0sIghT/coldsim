@@ -501,9 +501,21 @@ class coldsim
 		$this->prime_target = (int) $this->prime_target;
 	}
 
+	function import_spy_report_show()
+	{
+		$this->glade->get_widget('window_spy_report')->show();
+	}
+
+	function import_spy_report_hide()
+	{
+		$this->glade->get_widget('window_spy_report')->hide();
+	}
+
 	function import_spy_report()
 	{
 		global $root_path, $reslist;
+
+		$this->import_spy_report_hide();
 
 		$lang = array();
 		require($root_path . "lib/coldzone/lang/tech.php");
