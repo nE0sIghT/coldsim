@@ -35,6 +35,7 @@ class coldsim
 	{
 		$this->glade = &$object;
 		$this->glade->get_widget('acs_combobox')->set_active(0);
+		$this->glade->get_widget('acs_combobox_advanced')->set_active(0);
 		$this->glade->get_widget('fleet_factor')->set_active(0);
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
@@ -46,6 +47,15 @@ class coldsim
 	{
 		$this->store_current_acs();
 		$this->acs_slot = (int) $acs_combo->get_active();
+		$this->glade->get_widget('acs_combobox_advanced')->set_active($this->acs_slot);
+		$this->show_ships_results();
+	}
+
+	function acs_changed_advanced($acs_combo)
+	{
+		$this->store_current_acs("acs_combobox_advanced");
+		$this->acs_slot = (int) $acs_combo->get_active();
+		$this->glade->get_widget('acs_combobox')->set_active($this->acs_slot);
 		$this->show_ships_results();
 	}
 
@@ -58,11 +68,11 @@ class coldsim
 		$this->fleet_factor = $factors[$fleet_factor_combo->get_active()];
 	}
 
-	function store_current_acs()
+	function store_current_acs($combo_name = "acs_combobox")
 	{
 		global $reslist, $resource;
 
-		$acs_combo = $this->glade->get_widget("acs_combobox");
+		$acs_combo = $this->glade->get_widget($combo_name);
 		foreach($reslist['fleet'] as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
@@ -465,6 +475,30 @@ class coldsim
 
 		$this->glade->get_widget("lose_d_metal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])));
 		$this->glade->get_widget("lose_d_crystal")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
+
+		$this->glade->get_widget("debris_adv_a_m_min")->set_text(min($debris['total'][BATTLE_FLEET_ATTACKER]['metal']));
+		$this->glade->get_widget("debris_adv_a_c_min")->set_text(min($debris['total'][BATTLE_FLEET_ATTACKER]['crystal']));
+		$this->glade->get_widget("debris_adv_a_min")->set_text(min($debris['total'][BATTLE_FLEET_ATTACKER]['metal']) + min($debris['total'][BATTLE_FLEET_ATTACKER]['crystal']));
+
+		$this->glade->get_widget("debris_adv_a_m_avg")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])));
+		$this->glade->get_widget("debris_adv_a_c_avg")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])));
+		$this->glade->get_widget("debris_adv_a_avg")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])) + round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])));
+
+		$this->glade->get_widget("debris_adv_a_m_max")->set_text(max($debris['total'][BATTLE_FLEET_ATTACKER]['metal']));
+		$this->glade->get_widget("debris_adv_a_c_max")->set_text(max($debris['total'][BATTLE_FLEET_ATTACKER]['crystal']));
+		$this->glade->get_widget("debris_adv_a_max")->set_text(max($debris['total'][BATTLE_FLEET_ATTACKER]['metal']) + max($debris['total'][BATTLE_FLEET_ATTACKER]['crystal']));
+
+		$this->glade->get_widget("debris_adv_d_m_min")->set_text(min($debris['total'][BATTLE_FLEET_DEFENDER]['metal']));
+		$this->glade->get_widget("debris_adv_d_c_min")->set_text(min($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
+		$this->glade->get_widget("debris_adv_d_min")->set_text(min($debris['total'][BATTLE_FLEET_DEFENDER]['metal']) + min($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
+
+		$this->glade->get_widget("debris_adv_d_m_avg")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])));
+		$this->glade->get_widget("debris_adv_d_c_avg")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
+		$this->glade->get_widget("debris_adv_d_avg")->set_text(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])) + round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
+
+		$this->glade->get_widget("debris_adv_d_m_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['metal']));
+		$this->glade->get_widget("debris_adv_d_c_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
+		$this->glade->get_widget("debris_adv_d_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['metal']) + max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
 	}
 
 	function simulate_missile_attack()
@@ -579,18 +613,42 @@ class coldsim
 		{
 			$counts = isset($this->results['ships'][BATTLE_FLEET_ATTACKER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_ATTACKER][$this->acs_slot]['ships'][$element] : array();
 			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), 1) : 0;
+			$min = sizeof($counts) ? min($counts) : 0;
+			$max = sizeof($counts) ? max($counts) : 0;
 
 			if($this->glade->get_widget("label_a_$element"))
 			{
 				$this->glade->get_widget("label_a_$element")->set_text($count);
 			}
 
+			if($this->glade->get_widget("adv_a_a_$element"))
+			{
+				$this->glade->get_widget("adv_a_a_$element")->set_text($min);
+			}
+
+			if($this->glade->get_widget("adv_a_b_$element"))
+			{
+				$this->glade->get_widget("adv_a_b_$element")->set_text($max);
+			}
+
 			$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
 			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), 1) : 0;
+			$min = sizeof($counts) ? min($counts) : 0;
+			$max = sizeof($counts) ? max($counts) : 0;
 
 			if($this->glade->get_widget("label_d_$element"))
 			{
 				$this->glade->get_widget("label_d_$element")->set_text($count);
+			}
+
+			if($this->glade->get_widget("adv_d_a_$element"))
+			{
+				$this->glade->get_widget("adv_d_a_$element")->set_text($min);
+			}
+
+			if($this->glade->get_widget("adv_d_b_$element"))
+			{
+				$this->glade->get_widget("adv_d_b_$element")->set_text($max);
 			}
 		}
 
@@ -598,10 +656,22 @@ class coldsim
 		{
 			$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
 			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), 1) : 0;
+			$min = sizeof($counts) ? min($counts) : 0;
+			$max = sizeof($counts) ? max($counts) : 0;
 
 			if($this->glade->get_widget("label_d_$element"))
 			{
 				$this->glade->get_widget("label_d_$element")->set_text($count);
+			}
+
+			if($this->glade->get_widget("adv_d_a_$element"))
+			{
+				$this->glade->get_widget("adv_d_a_$element")->set_text($min);
+			}
+
+			if($this->glade->get_widget("adv_d_b_$element"))
+			{
+				$this->glade->get_widget("adv_d_b_$element")->set_text($max);
 			}
 		}
 
@@ -640,6 +710,16 @@ class coldsim
 				}
 			}
 		}
+	}
+
+	function advanced_show()
+	{
+		$this->glade->get_widget('window_advanced')->show();
+	}
+
+	function advanced_hide()
+	{
+		$this->glade->get_widget('window_advanced')->hide();
 	}
 
 	function select_region($object)
