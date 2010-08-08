@@ -588,18 +588,29 @@ class coldsim
 
 		$this->import_spy_report_hide();
 
+		$spy_buffer = $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter());
+		if(WIN_HOST)
+		{
+			$spy_buffer = iconv('cp1251', 'UTF-8', $spy_buffer);
+		}
+		
 		$lang = array();
 		require($root_path . "lib/coldzone/lang/tech.php");
 		$matches = array();
-		if(preg_match("/доклад с (.+) \[(\d):(\d{1,3}):(\d{1,2})\]/Uui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		if(preg_match("/доклад с (.+) \[(\d):(\d{1,3}):(\d{1,2})\]/Uui", $spy_buffer, $matches))
 		{
+			if(WIN_HOST)
+			{
+				$matches[1] = iconv('UTF-8', 'cp1251', $matches[1]);
+			}
+
 			$this->glade->get_widget('target_name')->set_text($matches[1]);
 			$this->glade->get_widget('target_galaxy')->set_text((int) $matches[2]);
 			$this->glade->get_widget('target_system')->set_text((int) $matches[3]);
 			$this->glade->get_widget('target_planet')->set_text((int) $matches[4]);
 		}
 
-		if(preg_match("/Металл\s+([\d\.]+)\s+Кристалл\s+([\d\.]+)[\s\n+]Дейтерий\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+		if(preg_match("/Металл\s+([\d\.]+)\s+Кристалл\s+([\d\.]+)[\s\n+]Дейтерий\s+([\d\.]+)/ui", $spy_buffer, $matches))
 		{
 			$this->glade->get_widget('target_metal')->set_text((int) str_replace('.', '', $matches[1]));
 			$this->glade->get_widget('target_crystal')->set_text((int) str_replace('.', '', $matches[2]));
@@ -608,7 +619,7 @@ class coldsim
 
 		foreach(array(TECH_MILITARY, TECH_SHIELD, TECH_DEFENCE, RPG_ADMIRAL) as $element)
 		{
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget('addition_d_' . $element)->set_text((int) $matches[1]);
 			}
@@ -616,7 +627,7 @@ class coldsim
 
 		foreach($reslist['fleet'] as $element)
 		{
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget("ship_d_$element")->set_text((int) $matches[1]);
 			}
@@ -631,7 +642,7 @@ class coldsim
 			if($element == MISSILE_INTERPLANETARY)
 				continue;
 
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $this->spy_buffer->get_text($this->spy_buffer->get_start_iter(), $this->spy_buffer->get_end_iter()), $matches))
+			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget("defense_$element")->set_text((int) $matches[1]);
 			}
