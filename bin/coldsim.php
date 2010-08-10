@@ -42,6 +42,7 @@ require($root_path . "lib/class_coldsim.php");
 require($root_path . "lib/functions.php");
 
 set_time_limit(0); // Override class_battle.php value
+@ini_set("memory_limit", -1);
 
 $glade = new GladeXML($root_path . "gui/coldsim.glade");
 $coldsim = new coldsim($glade);
