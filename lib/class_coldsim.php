@@ -272,6 +272,39 @@ class coldsim
 			RPG_GENERAL		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[RPG_GENERAL]],
 			RPG_AIDEDECAMP		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[RPG_AIDEDECAMP]],
 		);
+
+		$empty = true;
+		foreach($this->fleets[BATTLE_FLEET_ATTACKER] as $acs_slot => $slot_data)
+		{
+			foreach($slot_data['fleet'] as $ship_id => $ships_count)
+			{
+				if($ships_count)
+				{
+					$empty = false;
+					break 2;
+				}
+			}
+		}
+
+		if($empty)
+			return;
+
+		$empty = true;
+		foreach($this->fleets[BATTLE_FLEET_DEFENDER] as $acs_slot => $slot_data)
+		{
+			foreach($slot_data['fleet'] as $ship_id => $ships_count)
+			{
+				if($ships_count)
+				{
+					$empty = false;
+					break 2;
+				}
+			}
+		}
+
+		if($empty)
+			return;
+
 		$fleet_speed = get_fleet_speed($this->fleets[BATTLE_FLEET_ATTACKER][0]['fleet'], $source);
 		$distance = get_distance(
 			(int) $this->glade->get_widget("source_galaxy")->get_text(),
@@ -291,7 +324,7 @@ class coldsim
 		$this->glade->get_widget("fleet_hours")->set_text($fleet_hours);
 		$this->glade->get_widget("fleet_minutes")->set_text($fleet_minutes);
 		$this->glade->get_widget("fleet_seconds")->set_text($fleet_seconds);
-		
+
 		$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 		for($i = 0; $i < $this->simulations; $i++)
 		{
