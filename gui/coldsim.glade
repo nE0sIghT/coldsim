@@ -5034,7 +5034,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                               <widget class="GtkLabel" id="label92">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">&#x41B;&#x438;&#x43D;&#x435;&#x439;&#x43D;&#x44B;&#x439; &#x43A;&#x440;&#x435;&#x439;&#x441;&#x435;&#x440;</property>
+                                <property name="label" translatable="yes">&#x417;&#x432;&#x435;&#x437;&#x434;&#x430; &#x441;&#x43C;&#x435;&#x440;&#x442;&#x438;</property>
                               </widget>
                               <packing>
                                 <property name="top_attach">12</property>
@@ -5045,7 +5045,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                               <widget class="GtkLabel" id="label96">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">&#x417;&#x432;&#x435;&#x437;&#x434;&#x430; &#x421;&#x43C;&#x435;&#x440;&#x442;&#x438;</property>
+                                <property name="label" translatable="yes">&#x41B;&#x438;&#x43D;&#x435;&#x439;&#x43D;&#x44B;&#x439; &#x43A;&#x440;&#x435;&#x439;&#x441;&#x435;&#x440;</property>
                               </widget>
                               <packing>
                                 <property name="top_attach">13</property>
