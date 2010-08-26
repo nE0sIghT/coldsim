@@ -4358,7 +4358,7 @@
     <property name="transient_for">window_main</property>
     <property name="has_separator">False</property>
     <property name="program_name">ColdSim</property>
-    <property name="version">0.2</property>
+    <property name="version">0.2.1</property>
     <property name="copyright">Copyright (C) 2010 nE0sIghT</property>
     <property name="comments" translatable="yes">&#x421;&#x432;&#x43E;&#x431;&#x43E;&#x434;&#x43D;&#x44B;&#x439; &#x441;&#x438;&#x43C;&#x443;&#x43B;&#x44F;&#x442;&#x43E;&#x440; &#x431;&#x43E;&#x44F; Cold Zone</property>
     <property name="website">http://coldzone.ru</property>
