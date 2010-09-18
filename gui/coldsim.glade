@@ -5918,25 +5918,14 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label156">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">&#x41B;&#x438;&#x43D;&#x435;&#x439;&#x43D;&#x44B;&#x439; &#x43A;&#x440;&#x435;&#x439;&#x441;&#x435;&#x440;</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">13</property>
-                            <property name="bottom_attach">14</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkLabel" id="label157">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">&#x417;&#x432;&#x435;&#x437;&#x434;&#x430; &#x421;&#x43C;&#x435;&#x440;&#x442;&#x438;</property>
                           </widget>
                           <packing>
-                            <property name="top_attach">14</property>
-                            <property name="bottom_attach">15</property>
+                            <property name="top_attach">13</property>
+                            <property name="bottom_attach">14</property>
                           </packing>
                         </child>
                         <child>
@@ -6569,6 +6558,17 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                         </child>
                         <child>
                           <placeholder/>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label156">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">&#x41B;&#x438;&#x43D;&#x435;&#x439;&#x43D;&#x44B;&#x439; &#x43A;&#x440;&#x435;&#x439;&#x441;&#x435;&#x440;</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">14</property>
+                            <property name="bottom_attach">15</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>

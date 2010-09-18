@@ -364,7 +364,7 @@ class coldsim
 			$this->glade->get_widget("label_r_a_prefix")->set_visible(true);
 			$this->glade->get_widget("label_r_a_postfix")->set_visible(true);
 			$this->glade->get_widget("label_r_a_percent")->set_visible(true);
-			$this->glade->get_widget("label_r_a_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_ATTACKER]/$this->simulations) * 100);
+			$this->glade->get_widget("label_r_a_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_ATTACKER] * 100/$this->simulations));
 
 			$this->glade->get_widget("plunder_t_metal")->set_text(floor($this->results['plunder']['metal'] / 2));
 			$this->glade->get_widget("plunder_t_crystal")->set_text(floor($this->results['plunder']['crystal'] / 2));
@@ -501,7 +501,7 @@ class coldsim
 			$this->glade->get_widget("label_r_d_prefix")->set_visible(true);
 			$this->glade->get_widget("label_r_d_postfix")->set_visible(true);
 			$this->glade->get_widget("label_r_d_percent")->set_visible(true);
-			$this->glade->get_widget("label_r_d_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_DEFENDER]/$this->simulations) * 100);
+			$this->glade->get_widget("label_r_d_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_DEFENDER] * 100/$this->simulations));
 		}
 		else
 		{
@@ -515,7 +515,7 @@ class coldsim
 			$this->glade->get_widget("label_r_w_prefix")->set_visible(true);
 			$this->glade->get_widget("label_r_w_postfix")->set_visible(true);
 			$this->glade->get_widget("label_r_w_percent")->set_visible(true);
-			$this->glade->get_widget("label_r_w_percent")->set_text(round($this->results['battle'][BATTLE_DRAW]/$this->simulations) * 100);
+			$this->glade->get_widget("label_r_w_percent")->set_text(round($this->results['battle'][BATTLE_DRAW] * 100/$this->simulations));
 		}
 		else
 		{
