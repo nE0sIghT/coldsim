@@ -30,16 +30,21 @@ class coldsim
 	private $results;
 	private $prime_target	= 0;
 	private $spy_buffer;
+	private $file_filter	= null;
+	private $files_action_signal = null;
+	private $files_choose_signal = null;
 
 	function __construct($object)
 	{
 		$this->glade = &$object;
 		$this->glade->get_widget('acs_combobox')->set_active(0);
 		$this->glade->get_widget('acs_combobox_advanced')->set_active(0);
+		$this->glade->get_widget('files_combobox')->set_active(0);
 		$this->glade->get_widget('fleet_factor')->set_active(0);
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
 
+		$this->glade->get_widget('about_dialog')->set_version(VERSION);
 		$this->clear_results();
 	}
 
@@ -73,11 +78,13 @@ class coldsim
 		global $reslist, $resource;
 
 		$acs_combo = $this->glade->get_widget($combo_name);
+		$change_only = ((int) $acs_combo->get_active() == $this->acs_slot);
 		foreach($reslist['fleet'] as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
 			{
-				$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['fleet'][$element] = (int) $this->glade->get_widget("ship_a_$element")->get_text();
+				if(!$change_only)
+					$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['fleet'][$element] = (int) $this->glade->get_widget("ship_a_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_ATTACKER][(int) $acs_combo->get_active()]))
 				{
@@ -91,7 +98,8 @@ class coldsim
 
 			if($this->glade->get_widget("ship_d_$element"))
 			{
-				$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['fleet'][$element] = (int) $this->glade->get_widget("ship_d_$element")->get_text();
+				if(!$change_only)
+					$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['fleet'][$element] = (int) $this->glade->get_widget("ship_d_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_DEFENDER][(int) $acs_combo->get_active()]))
 				{
@@ -108,7 +116,8 @@ class coldsim
 		{
 			if($this->glade->get_widget("defense_$element"))
 			{
-				$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['fleet'][$element] = (int) $this->glade->get_widget("defense_$element")->get_text();
+				if(!$change_only)
+					$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['fleet'][$element] = (int) $this->glade->get_widget("defense_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_DEFENDER][(int) $acs_combo->get_active()]))
 				{
@@ -126,7 +135,8 @@ class coldsim
 		{
 			if($this->glade->get_widget("addition_a_$element"))
 			{
-				$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'][$resource[$element]] = (int) $this->glade->get_widget("addition_a_$element")->get_text();
+				if(!$change_only)
+					$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'][$resource[$element]] = (int) $this->glade->get_widget("addition_a_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_ATTACKER][(int) $acs_combo->get_active()]))
 				{
@@ -140,7 +150,8 @@ class coldsim
 
 			if($this->glade->get_widget("addition_d_$element"))
 			{
-				$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'][$resource[$element]] = (int) $this->glade->get_widget("addition_d_$element")->get_text();
+				if(!$change_only)
+					$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'][$resource[$element]] = (int) $this->glade->get_widget("addition_d_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_DEFENDER][(int) $acs_combo->get_active()]))
 				{
@@ -153,20 +164,23 @@ class coldsim
 			}
 		}
 
-		$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'] = array_merge($this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'], array(
-			'username'		=> '',
-			'id'			=> 0,
-			'fleet_start_galaxy'	=> 0,
-			'fleet_start_system'	=> 0,
-			'fleet_start_planet'	=> 0,
-			'fleet_end_galaxy'	=> 0,
-			'fleet_end_system'	=> 0,
-			'fleet_end_planet'	=> 0,
-		));
-		$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'] = array_merge($this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'], array(
-			'username'		=> '',
-			'id'			=> 0,
-		));
+		if(!$change_only)
+		{
+			$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'] = array_merge($this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'], array(
+				'username'		=> '',
+				'id'			=> 0,
+				'fleet_start_galaxy'	=> 0,
+				'fleet_start_system'	=> 0,
+				'fleet_start_planet'	=> 0,
+				'fleet_end_galaxy'	=> 0,
+				'fleet_end_system'	=> 0,
+				'fleet_end_planet'	=> 0,
+			));
+			$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'] = array_merge($this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'], array(
+				'username'		=> '',
+				'id'			=> 0,
+			));
+		}
 	}
 
 	function swap_fleet()
@@ -793,6 +807,210 @@ class coldsim
 		}
 	}
 
+	function files_open_dialog()
+	{
+		$window = $this->glade->get_widget('window_files');
+
+		$this->glade->get_widget('files_combobox')->set_active(0);
+		$this->files_filter_changed($this->glade->get_widget('files_combobox'));
+
+		if(!empty($this->files_action_signal))
+			$this->glade->get_widget('files_action_button')->disconnect($this->files_action_signal);
+
+		if(!empty($this->files_choose_signal))
+			$window->disconnect($this->files_choose_signal);
+
+		$this->glade->get_widget('files_action_button')->set_label('Открыть');
+		$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('clicked', array($this, 'open_data'));
+
+		$window->set_action(Gtk::FILE_CHOOSER_ACTION_OPEN);
+		$this->files_choose_signal = $window->connect('file-activated', array($this, 'open_data'));
+		$window->show();
+	}
+
+	function files_save_dialog()
+	{
+		$window = $this->glade->get_widget('window_files');
+
+		$this->glade->get_widget('files_combobox')->set_active(0);
+		$this->files_filter_changed($this->glade->get_widget('files_combobox'));
+
+		if(!empty($this->files_action_signal))
+			$this->glade->get_widget('files_action_button')->disconnect($this->files_action_signal);
+
+		if(!empty($this->files_choose_signal))
+			$window->disconnect($this->files_choose_signal);
+
+		$this->glade->get_widget('files_action_button')->set_label('Сохранить');
+		$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('clicked', array($this, 'save_data'));
+
+		$window->set_action(Gtk::FILE_CHOOSER_ACTION_SAVE);
+		$this->files_choose_signal = $window->connect('file-activated', array($this, 'save_data'));
+		$window->show();
+	}
+
+	function hide_files_dialog()
+	{
+		$this->window_hide($this->glade->get_widget('window_files'));
+	}
+
+	function show_save_options()
+	{
+		$this->glade->get_widget('window_save')->show();
+	}
+
+	function hide_save_options()
+	{
+		$this->window_hide($this->glade->get_widget('window_save'));
+	}
+
+	function files_filter_changed($filter_combo)
+	{
+		$index = $filter_combo->get_active();
+
+		$this->file_filter = new GtkFileFilter();
+		switch($index)
+		{
+			case 1:
+				$this->file_filter->add_pattern("*");
+				break;
+			case 0:
+			default:
+				$this->file_filter->add_pattern("*.csim");
+				break;
+		}
+
+		$this->glade->get_widget('window_files')->set_filter($this->file_filter);
+	}
+
+	function open_data()
+	{
+		$filename = $this->glade->get_widget('window_files')->get_filename();
+
+		if(file_exists($filename))
+		{
+			if($data = @file_get_contents($filename))
+			{
+				if($data = @base64_decode($data))
+				{
+					if($data = @unserialize($data))
+					{
+						if(is_array($data) && isset($data['version']) && $data['version'] >= 0.3)
+						{
+							$this->results = $data['results'];
+							$this->fleets = $data['fleets'];
+
+							$this->store_current_acs();
+							$this->show_ships_results();
+						}
+					}
+				} 
+			}
+		}
+
+		$this->window_hide($this->glade->get_widget('window_files'));
+	}
+
+	function save_data()
+	{
+		global $reslist, $resource;
+
+		$filename = $this->glade->get_widget('window_files')->get_filename();
+
+		if($this->glade->get_widget('files_combobox')->get_active() == 0 && substr(strrchr($filename, '.'), 1) != 'csim')
+		{
+			$filename = $filename . '.csim';
+		}
+
+		if(file_exists($filename))
+		{
+			if(!$this->confirm_box("Подтверждение", "Перезаписать файл " . basename($filename) . "?"))
+			{
+				$this->window_hide($this->glade->get_widget('window_files'));
+				return;
+			}
+		}
+
+		$data = array(
+			'version'	=> VERSION,
+			'results'	=> $this->results,
+			'fleets'	=> $this->fleets,
+		);
+
+		if(!$this->glade->get_widget('save_results')->get_active())
+		{
+			$data['results'] = array();
+		}
+
+		if(!$this->glade->get_widget('save_fleet_a')->get_active())
+		{
+			foreach($data['fleets'][BATTLE_FLEET_ATTACKER] as $acs_slot => $slot_data)
+			{
+				$data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['fleet'] = array();
+			}
+		}
+
+		if(!$this->glade->get_widget('save_fleet_d')->get_active())
+		{
+			foreach($data['fleets'][BATTLE_FLEET_DEFENDER] as $acs_slot => $slot_data)
+			{
+				$data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['fleet'] = array();
+			}
+		}
+
+		if(!$this->glade->get_widget('save_tech_a')->get_active())
+		{
+			foreach($data['fleets'][BATTLE_FLEET_ATTACKER] as $acs_slot => $slot_data)
+			{
+				foreach($reslist['tech'] as $element)
+				{
+					if(isset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]);
+				}
+			}
+		}
+
+		if(!$this->glade->get_widget('save_tech_d')->get_active())
+		{
+			foreach($data['fleets'][BATTLE_FLEET_DEFENDER] as $acs_slot => $slot_data)
+			{
+				foreach($reslist['tech'] as $element)
+				{
+					if(isset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]);
+				}
+			}
+		}
+
+		if(!$this->glade->get_widget('save_officiers_a')->get_active())
+		{
+			foreach($data['fleets'][BATTLE_FLEET_ATTACKER] as $acs_slot => $slot_data)
+			{
+				foreach($reslist['officier'] as $element)
+				{
+					if(isset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]);
+				}
+			}
+		}
+
+		if(!$this->glade->get_widget('save_officiers_d')->get_active())
+		{
+			foreach($data['fleets'][BATTLE_FLEET_DEFENDER] as $acs_slot => $slot_data)
+			{
+				foreach($reslist['officier'] as $element)
+				{
+					if(isset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]);
+				}
+			}
+		}
+
+		@file_put_contents($filename, base64_encode(serialize($data)));
+
+		$this->window_hide($this->glade->get_widget('window_files'));
+	}
+
 	function advanced_show()
 	{
 		$this->glade->get_widget('window_advanced')->show();
@@ -828,6 +1046,39 @@ class coldsim
 	{
 		$object->hide();
 		return true;
+	}
+
+	function confirm_box($title, $text, $parent = null)
+	{
+		$dialog = new GtkDialog();
+
+		if($parent)
+		{
+			//$dialog->set_parent($parent);
+		}
+
+		$dialog->set_title($title);
+		$label = new GtkLabel($text);
+		$dialog->vbox->pack_start($label);
+
+		$dialog->add_buttons(array(
+			Gtk::STOCK_YES, Gtk::RESPONSE_YES,
+			Gtk::STOCK_NO, Gtk::RESPONSE_NO
+			));
+		
+		$dialog->show_all();
+		$response_id = $dialog->run();
+		$dialog->destroy();
+
+		switch($response_id)
+		{
+			case Gtk::RESPONSE_YES:
+				return true;
+				break;
+			case Gtk::RESPONSE_NO:
+				return false;
+				break;
+		}
 	}
 
 	function main_quit()
