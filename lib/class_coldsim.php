@@ -824,6 +824,12 @@ class coldsim
 		$this->glade->get_widget("about_dialog")->hide();
 	}
 
+	function window_hide($object)
+	{
+		$object->hide();
+		return true;
+	}
+
 	function main_quit()
 	{
 		Gtk::main_quit();
