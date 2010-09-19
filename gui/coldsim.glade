@@ -4851,7 +4851,6 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                     <child>
                       <widget class="GtkLabel" id="release_info">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">label</property>
                         <property name="use_markup">True</property>
                       </widget>
                     </child>
@@ -4891,7 +4890,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="check_update"/>
+                <signal name="clicked" handler="check_update_manual"/>
               </widget>
               <packing>
                 <property name="expand">False</property>

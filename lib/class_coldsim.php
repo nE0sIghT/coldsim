@@ -1081,6 +1081,11 @@ class coldsim
 		$this->glade->get_widget('window_update')->show();
 	}
 
+	function check_update_manual()
+	{
+		$this->check_update();
+	}
+
 	function check_update($startup = false)
 	{
 		global $root_path;
