@@ -46,6 +46,10 @@ class coldsim
 
 		$this->glade->get_widget('about_dialog')->set_version(VERSION);
 		$this->clear_results();
+
+		$this->glade->get_widget('latest_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
+		$this->glade->get_widget('release_info')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#0000aa'));
+		$this->check_update(true);
 	}
 
 	function acs_changed($acs_combo)
@@ -73,12 +77,12 @@ class coldsim
 		$this->fleet_factor = $factors[$fleet_factor_combo->get_active()];
 	}
 
-	function store_current_acs($combo_name = "acs_combobox")
+	function store_current_acs($combo_name = "acs_combobox", $force_save = false)
 	{
 		global $reslist, $resource;
 
 		$acs_combo = $this->glade->get_widget($combo_name);
-		$change_only = ((int) $acs_combo->get_active() == $this->acs_slot);
+		$change_only = $force_save ? false : ((int) $acs_combo->get_active() == $this->acs_slot);
 		foreach($reslist['fleet'] as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
@@ -259,7 +263,7 @@ class coldsim
 	{
 		global $pricelist, $resource;
 
-		$this->store_current_acs();
+		$this->store_current_acs('acs_combobox', true);
 		$this->simulations = max(1, (int) $this->glade->get_widget("entry_simulations")->get_text());
 
 		$this->clear_results();
@@ -820,9 +824,10 @@ class coldsim
 		if(!empty($this->files_choose_signal))
 			$window->disconnect($this->files_choose_signal);
 
-		$this->glade->get_widget('files_action_button')->set_label('Открыть');
+		$this->glade->get_widget('files_action_button')->set_label($this->encode('Открыть'));
 		$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('clicked', array($this, 'open_data'));
 
+		$window->reparent($this->glade->get_widget('window_main'));
 		$window->set_action(Gtk::FILE_CHOOSER_ACTION_OPEN);
 		$this->files_choose_signal = $window->connect('file-activated', array($this, 'open_data'));
 		$window->show();
@@ -841,9 +846,10 @@ class coldsim
 		if(!empty($this->files_choose_signal))
 			$window->disconnect($this->files_choose_signal);
 
-		$this->glade->get_widget('files_action_button')->set_label('Сохранить');
+		$this->glade->get_widget('files_action_button')->set_label($this->encode('Сохранить'));
 		$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('clicked', array($this, 'save_data'));
 
+		$window->reparent($this->glade->get_widget('window_save'));
 		$window->set_action(Gtk::FILE_CHOOSER_ACTION_SAVE);
 		$this->files_choose_signal = $window->connect('file-activated', array($this, 'save_data'));
 		$window->show();
@@ -924,9 +930,8 @@ class coldsim
 
 		if(file_exists($filename))
 		{
-			if(!$this->confirm_box("Подтверждение", "Перезаписать файл " . basename($filename) . "?"))
+			if(!$this->confirm_box("Подтверждение", "Перезаписать файл " . basename($filename) . "?", $this->glade->get_widget('window_files')))
 			{
-				$this->window_hide($this->glade->get_widget('window_files'));
 				return;
 			}
 		}
@@ -1026,11 +1031,6 @@ class coldsim
 		$object->select_region(0, -1);
 	}
 
-	function update_check()
-	{
-		$this->glade->get_widget('window_update')->show();
-	}
-
 	function update_hide()
 	{
 		$this->glade->get_widget('window_update')->hide();
@@ -1050,15 +1050,9 @@ class coldsim
 
 	function confirm_box($title, $text, $parent = null)
 	{
-		$dialog = new GtkDialog();
+		$dialog = new GtkDialog($this->encode($title), $parent);
 
-		if($parent)
-		{
-			//$dialog->set_parent($parent);
-		}
-
-		$dialog->set_title($title);
-		$label = new GtkLabel($text);
+		$label = new GtkLabel($this->encode($text));
 		$dialog->vbox->pack_start($label);
 
 		$dialog->add_buttons(array(
@@ -1079,6 +1073,64 @@ class coldsim
 				return false;
 				break;
 		}
+	}
+
+	
+	function show_update()
+	{
+		$this->glade->get_widget('window_update')->show();
+	}
+
+	function check_update($startup = false)
+	{
+		global $root_path;
+
+		$config_file = $root_path . 'etc/update_check';
+
+		$this->glade->get_widget('current_version')->set_text(VERSION);
+		if($data = @file_get_contents($config_file))
+		{
+			list($last_check, $last_version) = explode("\n", $data);
+			if($startup && $last_check < time() - 24*60*60)
+			{
+				return;
+			}
+		}
+
+		if($update_data = file_get_contents("http://coldsim.coldzone.ru/version.txt"))
+		{
+			list($latest_version, $release_info) = explode("\n", $update_data);
+
+			$this->glade->get_widget('release_info')->set_markup('<u>' . $release_info . '</u>');
+			$this->glade->get_widget('latest_version')->set_text($latest_version);
+			$this->glade->get_widget('current_version')->set_text(VERSION);
+
+			if(version_compare(VERSION, $latest_version, "<"))
+			{
+				$this->glade->get_widget('current_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#ff0000'));
+
+				if($startup)
+				{
+					$this->show_update();
+				}
+			}
+			else
+			{
+				$this->glade->get_widget('current_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
+			}
+
+			@file_put_contents($config_file, time() . "\n" . $latest_version);
+		}
+	}
+
+	function release_url()
+	{
+		exec((WIN_HOST ? 'explorer.exe' : 'xdg-open') . ' ' . $this->glade->get_widget('release_info')->get_text());
+	}
+
+	function encode($string)
+	{
+		return WIN_HOST ? iconv('utf-8', 'cp1251', $string) : $string;
 	}
 
 	function main_quit()
