@@ -1086,12 +1086,13 @@ class coldsim
 		global $root_path;
 
 		$config_file = $root_path . 'etc/update_check';
+		$last_version = VERSION;
 
 		$this->glade->get_widget('current_version')->set_text(VERSION);
 		if($data = @file_get_contents($config_file))
 		{
 			list($last_check, $last_version) = explode("\n", $data);
-			if($startup && $last_check < time() - 24*60*60)
+			if($startup && $last_check > time() - 24*60*60)
 			{
 				return;
 			}
@@ -1109,7 +1110,7 @@ class coldsim
 			{
 				$this->glade->get_widget('current_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#ff0000'));
 
-				if($startup)
+				if($startup && $last_version != $latest_version)
 				{
 					$this->show_update();
 				}
