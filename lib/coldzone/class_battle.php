@@ -563,7 +563,9 @@ class Battle extends Report
 				$this->report_add_shield($target_type, $target['real_shield'] * $target['count']);
 			}
 
-			if($hull_percent)
+			if(!$hull_percent)
+				return;
+			else
 				$this->fleet_explode($target_type, $target, $shield_percent, $hull_percent, $full_attacks);
 
 			if($attacks > 1)

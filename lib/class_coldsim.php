@@ -268,6 +268,8 @@ class coldsim
 
 		$this->clear_results();
 
+		$calculate_time = array();
+
 		$debris = array(
 			'metal'		=> array(),
 			'crystal'	=> array(),
@@ -346,7 +348,9 @@ class coldsim
 		$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 		for($i = 0; $i < $this->simulations; $i++)
 		{
+			$start_time = microtime(true);
 			$battle->calculate();
+			$calculate_time[] = microtime(true) - $start_time;
 
 			for($fleet_type = BATTLE_FLEET_ATTACKER; $fleet_type != BATTLE_DRAW; $fleet_type = ($fleet_type == BATTLE_FLEET_ATTACKER ? BATTLE_FLEET_DEFENDER : BATTLE_DRAW))
 			{
@@ -587,6 +591,8 @@ class coldsim
 		$this->glade->get_widget("debris_adv_d_m_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['metal']));
 		$this->glade->get_widget("debris_adv_d_c_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
 		$this->glade->get_widget("debris_adv_d_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['metal']) + max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
+
+		$this->glade->get_widget("calculate_time")->set_text("Ср.: " . round(array_sum($calculate_time) / count($calculate_time), 2) . "; Макс: " . round(max($calculate_time), 2) . "; Мин: " . round(min($calculate_time), 2));
 	}
 
 	function simulate_missile_attack()
