@@ -592,7 +592,7 @@ class coldsim
 		$this->glade->get_widget("debris_adv_d_c_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
 		$this->glade->get_widget("debris_adv_d_max")->set_text(max($debris['total'][BATTLE_FLEET_DEFENDER]['metal']) + max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']));
 
-		$this->glade->get_widget("calculate_time")->set_text("Ср.: " . round(array_sum($calculate_time) / count($calculate_time), 2) . "; Макс: " . round(max($calculate_time), 2) . "; Мин: " . round(min($calculate_time), 2));
+		$this->glade->get_widget("calculate_time")->set_text(encode("Ср.: " . round(array_sum($calculate_time) / count($calculate_time), 2) . "; Макс: " . round(max($calculate_time), 2) . "; Мин: " . round(min($calculate_time), 2)));
 	}
 
 	function simulate_missile_attack()
