@@ -654,7 +654,7 @@ class coldsim
 		$lang = array();
 		require($root_path . "lib/coldzone/lang/tech.php");
 		$matches = array();
-		if(preg_match("/доклад с (.+) \[(\d):(\d{1,3}):(\d{1,2})\]/Uui", $spy_buffer, $matches))
+		if(preg_match("/доклад с (?:планеты|луны) (.+) \[(\d):(\d{1,3}):(\d{1,2})\]/Uui", $spy_buffer, $matches))
 		{
 			if(WIN_HOST)
 			{
@@ -684,7 +684,7 @@ class coldsim
 
 		foreach($reslist['fleet'] as $element)
 		{
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
+			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/u", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget("ship_d_$element")->set_text((int) $matches[1]);
 			}
@@ -699,7 +699,7 @@ class coldsim
 			if($element == MISSILE_INTERPLANETARY)
 				continue;
 
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
+			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/u", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget("defense_$element")->set_text((int) $matches[1]);
 			}
