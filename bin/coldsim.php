@@ -10,7 +10,7 @@
 
 define("IN_SIM", true);
 define("IN_GAME", true);
-define("VERSION", '0.3');
+define("VERSION", '0.3.2 alpha');
 
 define('MAX_PLAYER_PLANETS',	0); // Suppress undefined warning
 define('HOST',			'');
