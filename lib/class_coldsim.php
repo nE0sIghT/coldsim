@@ -21,7 +21,7 @@ class coldsim
 {
 	private $glade		= null;
 	private $acs_slot	= 0;
-	private $fleet_factor	= 1;
+	private $game_factor	= 1;
 	private $fleets		= array(
 		BATTLE_FLEET_ATTACKER		=> array(),
 		BATTLE_FLEET_DEFENDER		=> array(),
@@ -40,7 +40,8 @@ class coldsim
 		$this->glade->get_widget('acs_combobox')->set_active(0);
 		$this->glade->get_widget('acs_combobox_advanced')->set_active(0);
 		$this->glade->get_widget('files_combobox')->set_active(0);
-		$this->glade->get_widget('fleet_factor')->set_active(0);
+		$this->glade->get_widget('game_factor')->set_active(0);
+		$this->glade->get_widget('speed_factor')->set_active(0);
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
 
@@ -94,13 +95,13 @@ class coldsim
 		$this->show_ships_results();
 	}
 
-	function fleet_factor_changed($fleet_factor_combo)
+	function game_factor_changed($game_factor_combo)
 	{
 		$factors = array(
 			0	=> 1,
 			1	=> 1.5,
 		);
-		$this->fleet_factor = $factors[$fleet_factor_combo->get_active()];
+		$this->game_factor = $factors[$game_factor_combo->get_active()];
 	}
 
 	function store_current_acs($combo_name = "acs_combobox", $force_save = false)
@@ -351,6 +352,11 @@ class coldsim
 		if($empty)
 			return;
 
+		$speed_factor = array();
+		for($i = 100; $i >= 0; $i -= 10)
+			$speed_factor[] = $i;
+		$speed_factor = $speed_factor[(int) $this->glade->get_widget("speed_factor")->get_active()];
+		
 		$fleet_speed = get_fleet_speed($this->fleets[BATTLE_FLEET_ATTACKER][0]['fleet'], $source);
 		$distance = get_distance(
 			(int) $this->glade->get_widget("source_galaxy")->get_text(),
@@ -360,10 +366,10 @@ class coldsim
 			(int) $this->glade->get_widget("source_planet")->get_text(),
 			(int) $this->glade->get_widget("target_planet")->get_text()
 		);
-		$duration = get_duration($fleet_speed, $distance);
+		$duration = get_duration($fleet_speed, $distance, $speed_factor);
 		$consumption = get_fleet_consumption ($this->fleets[BATTLE_FLEET_ATTACKER][0]['fleet'], $source, $duration, $distance, $fleet_speed);
 
-		$duration = max(1, round($duration / $this->fleet_factor));
+		$duration = max(1, round($duration / $this->game_factor));
 		list($fleet_hours, $fleet_minutes, $fleet_seconds) = secs2time($duration);
 
 		$this->glade->get_widget("fleet_deuterium")->set_text($consumption);
