@@ -47,9 +47,35 @@ class coldsim
 		$this->glade->get_widget('about_dialog')->set_version(VERSION);
 		$this->clear_results();
 
+		$this->reorder_tab_chains();
+
 		$this->glade->get_widget('latest_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
 		$this->glade->get_widget('release_info')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#0000aa'));
 		$this->check_update(true);
+	}
+
+	function reorder_tab_chains()
+	{
+		global $reslist;
+
+		$tab_order = array();
+		$index = 0;
+		$index_offset = sizeof($reslist['fleet']) * 2;
+		foreach($reslist['fleet'] as $element)
+		{
+			if($this->glade->get_widget("ship_a_$element"))
+			{
+				$tab_order[$index++] = $this->glade->get_widget("ship_a_$element");
+			}
+
+			if($this->glade->get_widget("ship_d_$element"))
+			{
+				$tab_order[$index + $index_offset] = $this->glade->get_widget("ship_d_$element");
+			}
+			$index++;
+		}
+		ksort($tab_order);
+		$this->glade->get_widget("fleet_table")->set_focus_chain($tab_order);
 	}
 
 	function acs_changed($acs_combo)
