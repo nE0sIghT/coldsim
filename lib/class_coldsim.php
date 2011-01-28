@@ -60,9 +60,11 @@ class coldsim
 		if($this->config->get('position'))
 		{
 			list($x, $y) = explode(',', $this->config->get('position'));
-			$this->glade->get_widget('window_main')->set_position($x, $y);
+			echo "$x $y\n";
+			$this->glade->get_widget('window_main')->move($x, $y);
 		}
 
+		$this->glade->get_widget('window_main')->show();
 		$this->check_update(true);
 	}
 
@@ -1196,11 +1198,14 @@ class coldsim
 		return $number ? number_format($number, $precission, ',', '.') : 0;
 	}
 
+	function store_position()
+	{
+		$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position()));
+	}
+
 	function main_quit()
 	{
-		$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position($x, $y)));
 		unset($this->config);
-
 		Gtk::main_quit();
 	}
 }

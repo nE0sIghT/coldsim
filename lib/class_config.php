@@ -26,11 +26,11 @@ class config
 	{
 		global $root_path;
 
-		$this->config_file = $root_path . 'etc/update_check';
+		$this->config_file = $root_path . 'etc/coldsim.conf';
 
 		if(file_exists($this->config_file))
 		{
-			if($fp = fopen($this->config_file, 'wt'))
+			if($fp = fopen($this->config_file, 'rt'))
 			{
 				$raw = file($this->config_file);
 				foreach($raw as $line)
@@ -60,6 +60,8 @@ class config
 				default:
 					break;
 			}
+
+			$this->data['version'] = $this->default['version'];
 		}
 	}
 
