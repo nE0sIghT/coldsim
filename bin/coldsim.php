@@ -40,6 +40,7 @@ $root_path = get_root_path();
 require($root_path . "lib/coldzone/vars.php");
 require($root_path . "lib/coldzone/class_battle.php");
 require($root_path . "lib/class_coldsim.php");
+require($root_path . "lib/class_config.php");
 require($root_path . "lib/functions.php");
 
 set_time_limit(0); // Override class_battle.php value

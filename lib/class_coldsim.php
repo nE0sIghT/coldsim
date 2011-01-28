@@ -20,6 +20,7 @@ if(!class_exists('Battle'))
 class coldsim
 {
 	private $glade		= null;
+	private $config		= null;
 	private $acs_slot	= 0;
 	private $game_factor	= 1;
 	private $fleets		= array(
@@ -37,6 +38,8 @@ class coldsim
 
 	function __construct($object)
 	{
+		$this->config = new config();
+
 		$this->glade = &$object;
 		$this->glade->get_widget('acs_combobox')->set_active(0);
 		$this->glade->get_widget('acs_combobox_advanced')->set_active(0);
@@ -53,6 +56,13 @@ class coldsim
 
 		$this->glade->get_widget('latest_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
 		$this->glade->get_widget('release_info')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#0000aa'));
+
+		if($this->config->get('position'))
+		{
+			list($x, $y) = explode(',', $this->config->get('position'));
+			$this->glade->get_widget('window_main')->set_position($x, $y);
+		}
+
 		$this->check_update(true);
 	}
 
@@ -1188,6 +1198,9 @@ class coldsim
 
 	function main_quit()
 	{
+		$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position($x, $y)));
+		unset($this->config);
+
 		Gtk::main_quit();
 	}
 }
