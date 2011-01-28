@@ -1145,7 +1145,7 @@ class coldsim
 		{
 			list($latest_version, $release_info) = explode("\n", $update_data);
 
-			$this->glade->get_widget('release_info')->set_markup('<u>' . $release_info . '</u>');
+			$this->glade->get_widget('release_info')->set_markup('<u>' . $this->encode($release_info) . '</u>');
 			$this->glade->get_widget('latest_version')->set_text($latest_version);
 			$this->glade->get_widget('current_version')->set_text(VERSION);
 
