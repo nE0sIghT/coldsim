@@ -1,3 +1,3 @@
 @echo off
 
-.\php\php-win.exe .\bin\coldsim.php
+start .\php\php-win.exe .\bin\coldsim.php
