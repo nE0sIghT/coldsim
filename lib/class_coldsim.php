@@ -365,7 +365,7 @@ class coldsim
 			return;
 
 		$speed_factor = array();
-		for($i = 100; $i >= 0; $i -= 10)
+		for($i = 10; $i >= 0; $i -= 1)
 			$speed_factor[] = $i;
 		$speed_factor = $speed_factor[(int) $this->glade->get_widget("speed_factor")->get_active()];
 		
