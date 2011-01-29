@@ -19,6 +19,7 @@ class config
 		'version'			=> VERSION,
 		'position'			=> 0,
 		'settings_remember_position'	=> 1,
+		'settings_entry_simulations'	=> 20,
 	);
 	private $data = array();
 	private $config_file = null;
