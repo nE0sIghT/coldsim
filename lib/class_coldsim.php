@@ -57,10 +57,9 @@ class coldsim
 		$this->glade->get_widget('latest_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
 		$this->glade->get_widget('release_info')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#0000aa'));
 
-		if($this->config->get('position'))
+		if($this->config->get_setting('remember_position') && $this->config->get('position'))
 		{
 			list($x, $y) = explode(',', $this->config->get('position'));
-			echo "$x $y\n";
 			$this->glade->get_widget('window_main')->move($x, $y);
 		}
 
@@ -1099,6 +1098,44 @@ class coldsim
 		return true;
 	}
 
+	function settings_show()
+	{
+		$settings = $this->config->get_group('settings', true);
+		foreach($settings as $setting)
+		{
+			if($this->glade->get_widget($setting))
+			{
+				switch(get_class($this->glade->get_widget($setting)))
+				{
+					case 'GtkCheckButton':
+						$this->glade->get_widget($setting)->set_active($this->config->get_setting($setting)); 
+						break;
+				}
+			}
+		}
+
+		$this->glade->get_widget('window_settings')->show();
+	}
+
+	function settings_hide()
+	{
+		$settings = $this->config->get_group('settings', true);
+		foreach($settings as $setting)
+		{
+			if($this->glade->get_widget($setting))
+			{
+				switch(get_class($this->glade->get_widget($setting)))
+				{
+					case 'GtkCheckButton':
+						$this->config->set_setting($setting, $this->glade->get_widget($setting)->get_active()); 
+						break;
+				}
+			}
+		}
+
+		$this->glade->get_widget('window_settings')->hide();
+	}
+
 	function confirm_box($title, $text, $parent = null)
 	{
 		$dialog = new GtkDialog($this->encode($title), $parent);
@@ -1109,7 +1146,7 @@ class coldsim
 		$dialog->add_buttons(array(
 			Gtk::STOCK_YES, Gtk::RESPONSE_YES,
 			Gtk::STOCK_NO, Gtk::RESPONSE_NO
-			));
+		));
 		
 		$dialog->show_all();
 		$response_id = $dialog->run();
@@ -1141,17 +1178,10 @@ class coldsim
 	{
 		global $root_path;
 
-		$config_file = $root_path . 'etc/update_check';
-		$last_version = VERSION;
-
 		$this->glade->get_widget('current_version')->set_text(VERSION);
-		if($data = @file_get_contents($config_file))
+		if($startup && $this->config->get('update_check') > time() - 24*60*60)
 		{
-			list($last_check, $last_version) = explode("\n", $data);
-			if($startup && $last_check > time() - 24*60*60)
-			{
-				return;
-			}
+			return;
 		}
 
 		if($update_data = file_get_contents("http://coldsim.coldzone.ru/version.txt"))
@@ -1166,7 +1196,7 @@ class coldsim
 			{
 				$this->glade->get_widget('current_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#ff0000'));
 
-				if($startup && $last_version != $latest_version)
+				if($startup)
 				{
 					$this->show_update();
 				}
@@ -1176,7 +1206,7 @@ class coldsim
 				$this->glade->get_widget('current_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
 			}
 
-			@file_put_contents($config_file, time() . "\n" . $latest_version);
+			$this->config->set('update_check', time());
 		}
 	}
 
@@ -1200,7 +1230,8 @@ class coldsim
 
 	function store_position()
 	{
-		$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position()));
+		if($this->config->get_setting('remember_position'))
+			$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position()));
 	}
 
 	function main_quit()

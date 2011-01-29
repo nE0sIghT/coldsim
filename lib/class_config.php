@@ -16,8 +16,9 @@ if (!defined('IN_SIM'))
 class config
 {
 	private $default = array(
-		'version'	=> VERSION,
-		'position'	=> 0,
+		'version'			=> VERSION,
+		'position'			=> 0,
+		'settings_remember_position'	=> 1,
 	);
 	private $data = array();
 	private $config_file = null;
@@ -55,12 +56,6 @@ class config
 		// Upgrade config if needed
 		if(version_compare($this->data['version'], VERSION, "<"))
 		{
-			switch($this->data['version'])
-			{
-				default:
-					break;
-			}
-
 			$this->data['version'] = $this->default['version'];
 		}
 	}
@@ -82,9 +77,36 @@ class config
 		return isset($this->data[$key]) ? $this->data[$key] : (isset($this->default[$key]) ? $this->default[$key] : false);
 	}
 
+	function get_setting($key)
+	{
+		return $this->get('settings_' . $key);
+	}
+
 	function set($key, $value)
 	{
-		$this->data[$key] = $value;
+		if(is_bool($value) || is_null($value))
+			$value = (int) $value;
+
+		$this->data[$key] = (string) $value;
+	}
+
+	function set_setting($key, $value)
+	{
+		$this->set('settings_' . $key, $value);
+	}
+
+	function get_group($prefix, $omit_prefix = false)
+	{
+		$keys = array();
+		foreach($this->data as $key => $value)
+		{
+			if(strpos($key, $prefix . '_') === 0)
+			{
+				$keys[] = !$omit_prefix ? $key : substr($key, strlen($prefix) + 1);
+			}
+		}
+
+		return $keys;
 	}
 }
 
