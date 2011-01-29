@@ -7272,8 +7272,8 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <widget class="GtkCheckButton" id="remember_position">
-                        <property name="label" translatable="yes">&#x417;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x437;&#x438;&#x446;&#x438;&#x44E; &#x43E;&#x43A;&#x43D;&#x430; &#x43F;&#x43E;&#x441;&#x43B;&#x435; &#x437;&#x430;&#x43A;&#x440;&#x44B;&#x442;&#x438;&#x44F;</property>
+                      <widget class="GtkCheckButton" id="store_position">
+                        <property name="label" translatable="yes">&#x417;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x437;&#x438;&#x446;&#x438;&#x44E; &#x43E;&#x43A;&#x43D;&#x430;</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -7281,6 +7281,18 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                       </widget>
                       <packing>
                         <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="store_game_factor">
+                        <property name="label" translatable="yes">&#x417;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x442;&#x44C; &#x441;&#x43A;&#x43E;&#x440;&#x43E;&#x441;&#x442;&#x44C; &#x438;&#x433;&#x440;&#x44B;</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -7299,13 +7311,12 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkEntry" id="entry_simulations">
+                          <widget class="GtkEntry" id="simulations">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="max_length">4</property>
                             <property name="invisible_char">&#x25CF;</property>
-                            <property name="width_chars">4</property>
-                            <property name="text">20</property>
+                            <property name="width_chars">8</property>
                             <property name="xalign">1</property>
                             <property name="truncate_multiline">True</property>
                             <signal name="button_release_event" handler="select_region"/>
@@ -7317,7 +7328,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </widget>

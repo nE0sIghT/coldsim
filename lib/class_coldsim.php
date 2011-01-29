@@ -44,8 +44,14 @@ class coldsim
 		$this->glade->get_widget('acs_combobox')->set_active(0);
 		$this->glade->get_widget('acs_combobox_advanced')->set_active(0);
 		$this->glade->get_widget('files_combobox')->set_active(0);
-		$this->glade->get_widget('game_factor')->set_active(0);
 		$this->glade->get_widget('speed_factor')->set_active(0);
+
+		if($this->config->get_setting('store_game_factor'))
+			$this->glade->get_widget('game_factor')->set_active((int) $this->config->get_setting('game_factor'));
+		else
+			$this->glade->get_widget('game_factor')->set_active(0);
+		
+
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
 
@@ -57,7 +63,7 @@ class coldsim
 		$this->glade->get_widget('latest_version')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#008800'));
 		$this->glade->get_widget('release_info')->modify_fg(Gtk::STATE_NORMAL, GdkColor::parse('#0000aa'));
 
-		if($this->config->get_setting('remember_position') && $this->config->get('position'))
+		if($this->config->get_setting('store_position') && $this->config->get('position'))
 		{
 			list($x, $y) = explode(',', $this->config->get('position'));
 			$this->glade->get_widget('window_main')->move($x, $y);
@@ -114,6 +120,9 @@ class coldsim
 			1	=> 1.5,
 		);
 		$this->game_factor = $factors[$game_factor_combo->get_active()];
+
+		if($this->config->get_setting('store_game_factor'))
+			$this->config->set_setting('game_factor', $this->game_factor);
 	}
 
 	function store_current_acs($combo_name = "acs_combobox", $force_save = false)
@@ -303,7 +312,7 @@ class coldsim
 		global $pricelist, $resource;
 
 		$this->store_current_acs('acs_combobox', true);
-		$this->simulations = max(1, (int) $this->glade->get_widget("entry_simulations")->get_text());
+		$this->simulations = max(1, (int) $this->config->get_setting('simulations'));
 
 		$this->clear_results();
 
@@ -1111,6 +1120,9 @@ class coldsim
 					case 'GtkCheckButton':
 						$this->glade->get_widget($setting)->set_active($this->config->get_setting($setting)); 
 						break;
+					case 'GtkEntry':
+						$this->glade->get_widget($setting)->set_text($this->config->get_setting($setting));
+						break;
 				}
 			}
 		}
@@ -1129,6 +1141,9 @@ class coldsim
 				{
 					case 'GtkCheckButton':
 						$this->config->set_setting($setting, $this->glade->get_widget($setting)->get_active()); 
+						break;
+					case 'GtkEntry':
+						$this->config->set_setting($setting, $this->glade->get_widget($setting)->get_text());
 						break;
 				}
 			}
@@ -1231,7 +1246,7 @@ class coldsim
 
 	function store_position()
 	{
-		if($this->config->get_setting('remember_position'))
+		if($this->config->get_setting('store_position'))
 			$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position()));
 	}
 

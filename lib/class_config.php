@@ -18,8 +18,9 @@ class config
 	private $default = array(
 		'version'			=> VERSION,
 		'position'			=> 0,
-		'settings_remember_position'	=> 1,
-		'settings_entry_simulations'	=> 20,
+		'settings_store_position'	=> 1,
+		'settings_store_game_factor'	=> 1,
+		'settings_simulations'		=> 20,
 	);
 	private $data = array();
 	private $config_file = null;
