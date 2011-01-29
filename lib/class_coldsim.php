@@ -1064,6 +1064,7 @@ class coldsim
 		@file_put_contents($filename, base64_encode(serialize($data)));
 
 		$this->window_hide($this->glade->get_widget('window_files'));
+		$this->hide_save_options();
 	}
 
 	function advanced_show()
