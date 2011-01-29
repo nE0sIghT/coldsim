@@ -59,7 +59,7 @@
                         <property name="label">&#x412;&#x44B;&#x445;&#x43E;&#x434;</property>
                         <property name="visible">True</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="main_quit"/>
+                        <signal name="activate" handler="quit_button_clicked"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image3">
                             <property name="visible">True</property>

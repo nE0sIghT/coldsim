@@ -19,22 +19,22 @@ if(!class_exists('Battle'))
 
 class coldsim
 {
-	private $glade		= null;
-	private $config		= null;
-	private $acs_slot	= 0;
-	private $game_factor	= 1;
-	private $fleets		= array(
+	private $glade			= null;
+	private $config			= null;
+	private $acs_slot		= 0;
+	private $game_factor		= 1;
+	private $fleets			= array(
 		BATTLE_FLEET_ATTACKER		=> array(),
 		BATTLE_FLEET_DEFENDER		=> array(),
 	);
-	private $simulations	= 20;
+	private $simulations		= 20;
 	private $results;
-	private $prime_target	= 0;
+	private $prime_target		= 0;
 	private $spy_buffer;
-	private $file_filter	= null;
-	private $files_action_signal = null;
-	private $files_choose_signal = null;
-	private $precission	= 1;
+	private $file_filter		= null;
+	private $files_action_signal	= null;
+	private $files_choose_signal	= null;
+	private $precission		= 1;
 
 	function __construct($object)
 	{
