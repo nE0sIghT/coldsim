@@ -36,6 +36,21 @@ class coldsim
 	private $files_choose_signal	= null;
 	private $precission		= 1;
 
+	private $lang			= array(
+		'RESULT_BATTLE_ATTACKER'	=> '| Победа атакующего (%u%%) |',
+		'RESULT_BATTLE_DEFENDER'	=> '| Победа обороняющегося (%u%%) |',
+		'RESULT_BATTLE_DRAW'		=> '| Ничья (%u%%) |',
+		'RESULT_BATTLE_ROUNDS'		=> ' После ~%u раундов',
+
+		'RESULT_DEBRIS'			=> '%s металла, %s кристалла ~ %s переработчиков',
+		'RESULT_LOSE_RESOURCES'		=> '%s металла, %s кристалла',
+		'RESULT_PLUNDER'		=> '%s металла, %s кристалла и %s дейтерия ~ %s БТ',
+		'RESULT_PLUNDER_REAL'		=> '%s металла, %s кристалла и %s дейтерия (%u%% загрузки)',
+		'RESULT_DEUTERIUM'		=> '%s дейтерия',
+		'RESULT_TIME'			=> '%02u:%02u:%02u часов',
+		'CALCULATE_TIME'		=> 'Ср.: %.2f; Макс: %.2f; Мин: %.2f',
+	);
+
 	function __construct($object)
 	{
 		$this->config = new config();
@@ -393,10 +408,12 @@ class coldsim
 		$duration = max(1, round($duration / $this->game_factor));
 		list($fleet_hours, $fleet_minutes, $fleet_seconds) = secs2time($duration);
 
-		$this->glade->get_widget("fleet_deuterium")->set_text($this->number_format($consumption));
-		$this->glade->get_widget("fleet_hours")->set_text($fleet_hours);
-		$this->glade->get_widget("fleet_minutes")->set_text($fleet_minutes);
-		$this->glade->get_widget("fleet_seconds")->set_text($fleet_seconds);
+		$this->glade->get_widget('fleet_deuterium')->set_text($this->encode(sprintf($this->lang['RESULT_DEUTERIUM'], $this->number_format($consumption))));
+		$this->glade->get_widget('fleet_time')->set_text($this->encode(sprintf($this->lang['RESULT_TIME'],
+			$fleet_hours,
+			$fleet_minutes,
+			$fleet_seconds
+		)));
 
 		$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 		for($i = 0; $i < $this->simulations; $i++)
@@ -434,17 +451,17 @@ class coldsim
 		$this->results['plunder']['crystal'] = (int) $this->glade->get_widget("target_crystal")->get_text();
 		$this->results['plunder']['deuterium'] = (int) $this->glade->get_widget("target_deuterium")->get_text();
 
+		$result_battle = '';
 		if($this->results['battle'][BATTLE_FLEET_ATTACKER])
 		{
-			$this->glade->get_widget("label_r_a_prefix")->set_visible(true);
-			$this->glade->get_widget("label_r_a_postfix")->set_visible(true);
-			$this->glade->get_widget("label_r_a_percent")->set_visible(true);
-			$this->glade->get_widget("label_r_a_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_ATTACKER] * 100/$this->simulations));
+			$result_battle .= sprintf($this->lang['RESULT_BATTLE_ATTACKER'], round($this->results['battle'][BATTLE_FLEET_ATTACKER] * 100/$this->simulations));
 
-			$this->glade->get_widget("plunder_t_metal")->set_text(floor($this->results['plunder']['metal'] / 2));
-			$this->glade->get_widget("plunder_t_crystal")->set_text(floor($this->results['plunder']['crystal'] / 2));
-			$this->glade->get_widget("plunder_t_deuterium")->set_text(floor($this->results['plunder']['deuterium'] / 2));
-			$this->glade->get_widget("plunder_t_cargo")->set_text(ceil((floor($this->results['plunder']['metal'] / 2) + floor($this->results['plunder']['crystal'] / 2) + floor($this->results['plunder']['deuterium'] / 2)) / $pricelist[SHIP_TRANSPORT_BIG]['capacity']));
+			$this->glade->get_widget('result_plunder')->set_text($this->encode(sprintf($this->lang['RESULT_PLUNDER'],
+				$this->number_format(floor($this->results['plunder']['metal'] / 2)),
+				$this->number_format(floor($this->results['plunder']['crystal'] / 2)),
+				$this->number_format(floor($this->results['plunder']['deuterium'] / 2)),
+				$this->number_format(ceil((floor($this->results['plunder']['metal'] / 2) + floor($this->results['plunder']['crystal'] / 2) + floor($this->results['plunder']['deuterium'] / 2)) / $pricelist[SHIP_TRANSPORT_BIG]['capacity']))
+			)));
 
 			foreach ($this->results['ships'][BATTLE_FLEET_ATTACKER] as $fleet_id => $ships)
 			{
@@ -556,70 +573,45 @@ class coldsim
 		}
 		else
 		{
-			$this->glade->get_widget("label_r_a_prefix")->set_visible(false);
-			$this->glade->get_widget("label_r_a_postfix")->set_visible(false);
-			$this->glade->get_widget("label_r_a_percent")->set_visible(false);
-
-			$this->glade->get_widget("plunder_t_metal")->set_text(0);
-			$this->glade->get_widget("plunder_t_crystal")->set_text(0);
-			$this->glade->get_widget("plunder_t_deuterium")->set_text(0);
-			$this->glade->get_widget("plunder_t_cargo")->set_text(0);
-
-			$this->glade->get_widget("plunder_r_metal")->set_text(0);
-			$this->glade->get_widget("plunder_r_crystal")->set_text(0);
-			$this->glade->get_widget("plunder_r_deuterium")->set_text(0);
-			$this->glade->get_widget("plunder_r_boot")->set_text(0);
+			$this->glade->get_widget('result_plunder')->set_text($this->encode(sprintf($this->lang['RESULT_PLUNDER'], 0, 0, 0, 0)));
+			$this->glade->get_widget('result_plunder_real')->set_text($this->encode(sprintf($this->lang['RESULT_PLUNDER_REAL'], 0, 0, 0, 0)));
 		}
 
 		if($this->results['battle'][BATTLE_FLEET_DEFENDER])
 		{
-			$this->glade->get_widget("label_r_d_prefix")->set_visible(true);
-			$this->glade->get_widget("label_r_d_postfix")->set_visible(true);
-			$this->glade->get_widget("label_r_d_percent")->set_visible(true);
-			$this->glade->get_widget("label_r_d_percent")->set_text(round($this->results['battle'][BATTLE_FLEET_DEFENDER] * 100/$this->simulations));
-		}
-		else
-		{
-			$this->glade->get_widget("label_r_d_prefix")->set_visible(false);
-			$this->glade->get_widget("label_r_d_postfix")->set_visible(false);
-			$this->glade->get_widget("label_r_d_percent")->set_visible(false);
+			$result_battle .= sprintf($this->lang['RESULT_BATTLE_DEFENDER'], round($this->results['battle'][BATTLE_FLEET_DEFENDER] * 100/$this->simulations));
 		}
 
 		if($this->results['battle'][BATTLE_DRAW])
 		{
-			$this->glade->get_widget("label_r_w_prefix")->set_visible(true);
-			$this->glade->get_widget("label_r_w_postfix")->set_visible(true);
-			$this->glade->get_widget("label_r_w_percent")->set_visible(true);
-			$this->glade->get_widget("label_r_w_percent")->set_text(round($this->results['battle'][BATTLE_DRAW] * 100/$this->simulations));
+			$result_battle .= sprintf($this->lang['RESULT_BATTLE_DRAW'], round($this->results['battle'][BATTLE_DRAW] * 100/$this->simulations));
 		}
-		else
-		{
-			$this->glade->get_widget("label_r_w_prefix")->set_visible(false);
-			$this->glade->get_widget("label_r_w_postfix")->set_visible(false);
-			$this->glade->get_widget("label_r_w_percent")->set_visible(false);
-		}
+
+		$result_battle .= sprintf($this->lang['RESULT_BATTLE_ROUNDS'], round(round(array_sum($this->results['rounds'])/sizeof($this->results['rounds']))));
+		$this->glade->get_widget("label_result_battle")->set_text($this->encode($result_battle));
 
 		$this->show_ships_results();
 
-		$this->glade->get_widget("label_r_r_prefix")->set_visible(true);
-		$this->glade->get_widget("label_r_r_postfix")->set_visible(true);
-		$this->glade->get_widget("label_r_r_rounds")->set_visible(true);
-		$this->glade->get_widget("label_r_r_rounds")->set_text(round(array_sum($this->results['rounds'])/sizeof($this->results['rounds'])));
-
-		$this->glade->get_widget("moon_chance")->set_text(round($battle->moon_chance));
+		$this->glade->get_widget("moon_chance")->set_text(round($battle->moon_chance) . '%');
 
 		$debris_metal = round(array_sum($debris['metal'])/sizeof($debris['metal']));
 		$debris_crystal = round(array_sum($debris['crystal'])/sizeof($debris['crystal']));
 
-		$this->glade->get_widget("debris_metal")->set_text($this->number_format($debris_metal));
-		$this->glade->get_widget("debris_crystal")->set_text($this->number_format($debris_crystal));
-		$this->glade->get_widget("debris_recyclers")->set_text($this->number_format(ceil(($debris_metal + $debris_crystal) / $pricelist[SHIP_RECYCLER]['capacity'])));
+		$this->glade->get_widget('label_result_debris')->set_text($this->encode(sprintf($this->lang['RESULT_DEBRIS'],
+			$this->number_format($debris_metal),
+			$this->number_format($debris_crystal),
+			$this->number_format(ceil(($debris_metal + $debris_crystal) / $pricelist[SHIP_RECYCLER]['capacity']))
+		)));
 
-		$this->glade->get_widget("lose_a_metal")->set_text($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['metal']))));
-		$this->glade->get_widget("lose_a_crystal")->set_text($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['crystal']))));
+		$this->glade->get_widget("result_lose_attacker")->set_text($this->encode(sprintf($this->lang['RESULT_LOSE_RESOURCES'],
+			$this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['metal']))),
+			$this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])))
+		)));
 
-		$this->glade->get_widget("lose_d_metal")->set_text($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal']))));
-		$this->glade->get_widget("lose_d_crystal")->set_text($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']))));
+		$this->glade->get_widget("result_lose_defender")->set_text($this->encode(sprintf($this->lang['RESULT_LOSE_RESOURCES'],
+			$this->number_format($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])))),
+			$this->number_format($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']))))
+		)));
 
 		$this->glade->get_widget("debris_adv_a_m_min")->set_text($this->number_format(min($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])));
 		$this->glade->get_widget("debris_adv_a_c_min")->set_text($this->number_format(min($debris['total'][BATTLE_FLEET_ATTACKER]['crystal'])));
@@ -645,7 +637,11 @@ class coldsim
 		$this->glade->get_widget("debris_adv_d_c_max")->set_text($this->number_format(max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
 		$this->glade->get_widget("debris_adv_d_max")->set_text($this->number_format(max($debris['total'][BATTLE_FLEET_DEFENDER]['metal']) + max($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])));
 
-		$this->glade->get_widget("calculate_time")->set_text($this->encode("Ср.: " . round(array_sum($calculate_time) / count($calculate_time), 2) . "; Макс: " . round(max($calculate_time), 2) . "; Мин: " . round(min($calculate_time), 2)));
+		$this->glade->get_widget("calculate_time")->set_text($this->encode(sprintf($this->lang['CALCULATE_TIME'],
+			round(array_sum($calculate_time) / count($calculate_time), 2),
+			round(max($calculate_time), 2),
+			round(min($calculate_time), 2)
+		)));
 	}
 
 	function simulate_missile_attack()
@@ -835,10 +831,12 @@ class coldsim
 
 		if($this->results['battle'][BATTLE_FLEET_ATTACKER])
 		{
-			$this->glade->get_widget("plunder_r_metal")->set_text($this->number_format($this->results['steal'][$this->acs_slot]['metal']));
-			$this->glade->get_widget("plunder_r_crystal")->set_text($this->number_format($this->results['steal'][$this->acs_slot]['crystal']));
-			$this->glade->get_widget("plunder_r_deuterium")->set_text($this->number_format($this->results['steal'][$this->acs_slot]['deuterium']));
-			$this->glade->get_widget("plunder_r_boot")->set_text(($this->results['plunder']['metal'] + $this->results['plunder']['crystal'] + $this->results['plunder']['deuterium']) ? round((($this->results['steal'][$this->acs_slot]['metal'] + $this->results['steal'][$this->acs_slot]['crystal'] + $this->results['steal'][$this->acs_slot]['deuterium']) / ($this->results['plunder']['metal'] + $this->results['plunder']['crystal'] + $this->results['plunder']['deuterium']) * 2) * 100, 1) : 0);
+			$this->glade->get_widget('result_plunder_real')->set_text($this->encode(sprintf($this->lang['RESULT_PLUNDER_REAL'],
+				$this->number_format($this->results['steal'][$this->acs_slot]['metal']),
+				$this->number_format($this->results['steal'][$this->acs_slot]['crystal']),
+				$this->number_format($this->results['steal'][$this->acs_slot]['deuterium']),
+				($this->results['plunder']['metal'] + $this->results['plunder']['crystal'] + $this->results['plunder']['deuterium']) ? round((($this->results['steal'][$this->acs_slot]['metal'] + $this->results['steal'][$this->acs_slot]['crystal'] + $this->results['steal'][$this->acs_slot]['deuterium']) / ($this->results['plunder']['metal'] + $this->results['plunder']['crystal'] + $this->results['plunder']['deuterium']) * 2) * 100, 1) : 0
+			)));
 		}
 	}
 
@@ -868,6 +866,33 @@ class coldsim
 				}
 			}
 		}
+	}
+
+	function results_to_clipboard()
+	{
+		$elements_ary = array(
+			array('label61', 'label_result_battle'),
+			array('label55', 'moon_chance'),
+			array('label54', 'label_result_debris'),
+			array('label56', 'result_lose_attacker'),
+			array('label57', 'result_lose_defender'),
+			array('label58', 'result_plunder'),
+			array('label59', 'result_plunder_real'),
+			array('label83', 'fleet_deuterium'),
+			array('label84', 'fleet_time'),
+			array('label143', 'calculate_time'),
+		);
+			
+		$clipboard = new GtkClipboard($this->glade->get_widget('window_main')->get_display(),
+						Gdk::atom_intern('CLIPBOARD')); 
+
+		$results = '';
+		foreach($elements_ary as $elements)
+		{
+			$results .= str_replace("\n", ' ', $this->glade->get_widget($elements[0])->get_text()) . "\t" . $this->glade->get_widget($elements[1])->get_text() . "\n";
+		}
+		$clipboard->set_text($results);
+		$clipboard->store();
 	}
 
 	function files_open_dialog()

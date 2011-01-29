@@ -3486,7 +3486,7 @@
                             <property name="border_width">5</property>
                             <property name="left_padding">12</property>
                             <child>
-                              <widget class="GtkTable" id="table8">
+                              <widget class="GtkTable" id="results_table">
                                 <property name="visible">True</property>
                                 <property name="n_rows">10</property>
                                 <property name="n_columns">2</property>
@@ -3573,647 +3573,6 @@
                                   </widget>
                                 </child>
                                 <child>
-                                  <widget class="GtkHBox" id="hbox11">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_a_prefix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">| &#x41F;&#x43E;&#x431;&#x435;&#x434;&#x430; &#x430;&#x442;&#x430;&#x43A;&#x443;&#x44E;&#x449;&#x435;&#x433;&#x43E; (</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_a_percent">
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_a_postfix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">%) |</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_d_prefix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">| &#x41F;&#x43E;&#x431;&#x435;&#x434;&#x430; &#x43E;&#x431;&#x43E;&#x440;&#x43E;&#x43D;&#x44F;&#x44E;&#x449;&#x435;&#x433;&#x43E;&#x441;&#x44F; (</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_d_percent">
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_d_postfix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">%) |</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_w_prefix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">| &#x41D;&#x438;&#x447;&#x44C;&#x44F; (</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">6</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_w_percent">
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">7</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_w_postfix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">%) |</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">8</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_r_prefix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43F;&#x43E;&#x441;&#x43B;&#x435; ~</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">9</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_r_rounds">
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">10</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_r_r_postfix">
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x440;&#x430;&#x443;&#x43D;&#x434;&#x43E;&#x432;</property>
-                                        <property name="selectable">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">11</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox10">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_r_metal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label76">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_r_crystal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label78">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430; </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_r_deuterium">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label80">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes"> &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F; (</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_r_boot">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">6</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label82">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">% &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43A;&#x438;)</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">7</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">6</property>
-                                    <property name="bottom_attach">7</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox9">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_t_metal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label68">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_t_crystal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label70">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430; &#x438; </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_t_deuterium">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label72">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes"> &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F; ~ </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="plunder_t_cargo">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">6</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label74">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x411;&#x422;</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">7</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">5</property>
-                                    <property name="bottom_attach">6</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox8">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="lose_d_metal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label52">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="lose_d_crystal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label64">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430;</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="lose_d_deuterium">
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label66">
-                                        <property name="label" translatable="yes"> Deuterium</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">4</property>
-                                    <property name="bottom_attach">5</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox7">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="lose_a_metal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label46">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="lose_a_crystal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label48">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430;</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="lose_a_deuterium">
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label50">
-                                        <property name="label" translatable="yes"> Deuterium</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">3</property>
-                                    <property name="bottom_attach">4</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox6">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="moon_chance">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label44">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">%</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox5">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="debris_metal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label34">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430; (</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label35">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label36">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">%), </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="debris_crystal">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                        <property name="single_line_mode">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label38">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430; (</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label39">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">6</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label40">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">%) ~ </property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">7</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="debris_recyclers">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                        <property name="single_line_mode">True</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">8</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label42">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x43F;&#x435;&#x440;&#x435;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x43E;&#x432;</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">9</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
-                                  </packing>
-                                </child>
-                                <child>
                                   <widget class="GtkLabel" id="label83">
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
@@ -4237,116 +3596,6 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <widget class="GtkHBox" id="hbox3">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="fleet_deuterium">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label">0</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label85">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label"> &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F;</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">7</property>
-                                    <property name="bottom_attach">8</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkHBox" id="hbox12">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="fleet_hours">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">00</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label87">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">:</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="fleet_minutes">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">00</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label89">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">:</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="fleet_seconds">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">00</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label91">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="label" translatable="yes"> &#x447;&#x430;&#x441;&#x43E;&#x432;</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">5</property>
-                                      </packing>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">8</property>
-                                    <property name="bottom_attach">9</property>
-                                  </packing>
-                                </child>
-                                <child>
                                   <widget class="GtkLabel" id="label143">
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
@@ -4362,6 +3611,8 @@
                                   <widget class="GtkLabel" id="calculate_time">
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">-</property>
+                                    <property name="selectable">True</property>
                                   </widget>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -4370,15 +3621,170 @@
                                     <property name="bottom_attach">10</property>
                                   </packing>
                                 </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label_result_battle">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">&#x41D;&#x430;&#x436;&#x43C;&#x438;&#x442;&#x435; &#x43A;&#x43D;&#x43E;&#x43F;&#x43A;&#x443; "&#x420;&#x430;&#x441;&#x447;&#x435;&#x442; &#x431;&#x43E;&#x44F;"</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="moon_chance">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label">0%</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label_result_debris">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">0 &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, 0 &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430; ~ 0 &#x43F;&#x435;&#x440;&#x435;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x43E;&#x432;</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="result_lose_attacker">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">0 &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, 0 &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430;</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">3</property>
+                                    <property name="bottom_attach">4</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="result_lose_defender">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">0 &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, 0 &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430;</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">4</property>
+                                    <property name="bottom_attach">5</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="result_plunder">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">0 &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, 0 &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430; &#x438; 0 &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F; ~ 0 &#x411;&#x422;</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">5</property>
+                                    <property name="bottom_attach">6</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="result_plunder_real">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">0 &#x43C;&#x435;&#x442;&#x430;&#x43B;&#x43B;&#x430;, 0 &#x43A;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43B;&#x43B;&#x430; &#x438; 0 &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F; (0% &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43A;&#x438;)</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">6</property>
+                                    <property name="bottom_attach">7</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="fleet_deuterium">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">0 &#x434;&#x435;&#x439;&#x442;&#x435;&#x440;&#x438;&#x44F;</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">7</property>
+                                    <property name="bottom_attach">8</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="fleet_time">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">00:00:00 &#x447;&#x430;&#x441;&#x43E;&#x432;</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">8</property>
+                                    <property name="bottom_attach">9</property>
+                                  </packing>
+                                </child>
                               </widget>
                             </child>
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label5">
+                          <widget class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">&lt;b&gt;&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;&#x44B;&lt;/b&gt;</property>
-                            <property name="use_markup">True</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <widget class="GtkLabel" id="label5">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">&lt;b&gt;&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;&#x44B;&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </widget>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkHButtonBox" id="hbuttonbox9">
+                                <property name="visible">True</property>
+                                <child>
+                                  <widget class="GtkButton" id="button19">
+                                    <property name="label" translatable="yes">&#x412; &#x431;&#x443;&#x444;&#x435;&#x440; &#x43E;&#x431;&#x43C;&#x435;&#x43D;&#x430;</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <signal name="clicked" handler="results_to_clipboard"/>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </widget>
                           <packing>
                             <property name="type">label_item</property>
