@@ -1235,6 +1235,12 @@ class coldsim
 			$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position()));
 	}
 
+	function quit_button_clicked()
+	{
+		$this->store_position();
+		$this->main_quit();
+	}
+
 	function main_quit()
 	{
 		unset($this->config);
