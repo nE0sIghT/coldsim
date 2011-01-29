@@ -1174,7 +1174,7 @@ class coldsim
 			}
 		}
 
-		$this->glade->get_widget('window_settings')->hide();
+		return $this->window_hide($this->glade->get_widget('window_settings'));
 	}
 
 	function confirm_box($title, $text, $parent = null)
