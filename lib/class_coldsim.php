@@ -65,6 +65,7 @@ class coldsim
 			$this->glade->get_widget('game_factor')->set_active((int) $this->config->get_setting('game_factor'));
 		else
 			$this->glade->get_widget('game_factor')->set_active(0);
+		$this->game_factor_changed($this->glade->get_widget('game_factor'));
 
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
