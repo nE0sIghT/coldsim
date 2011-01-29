@@ -65,7 +65,6 @@ class coldsim
 			$this->glade->get_widget('game_factor')->set_active((int) $this->config->get_setting('game_factor'));
 		else
 			$this->glade->get_widget('game_factor')->set_active(0);
-		
 
 		$this->spy_buffer = new GtkTextBuffer();
 		$this->glade->get_widget('spy_report')->set_buffer($this->spy_buffer);
@@ -609,8 +608,8 @@ class coldsim
 		)));
 
 		$this->glade->get_widget("result_lose_defender")->set_text($this->encode(sprintf($this->lang['RESULT_LOSE_RESOURCES'],
-			$this->number_format($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])))),
-			$this->number_format($this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal']))))
+			$this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['metal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['metal']))),
+			$this->number_format(round(array_sum($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])/sizeof($debris['total'][BATTLE_FLEET_DEFENDER]['crystal'])))
 		)));
 
 		$this->glade->get_widget("debris_adv_a_m_min")->set_text($this->number_format(min($debris['total'][BATTLE_FLEET_ATTACKER]['metal'])));
