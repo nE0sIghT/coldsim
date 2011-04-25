@@ -3,7 +3,7 @@
 *
 * @package ColdSim
 * @version $Id$
-* @copyright (c) 2010 nE0sIghT
+* @copyright (c) 2010-2011 Yuri nE0sIghT Konotopov, http://coldzone.ru
 * @license GNU Affero General Public License, version 3 http://www.gnu.org/licenses/agpl-3.0.html
 *
 */

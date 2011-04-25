@@ -2,7 +2,7 @@
 /**
 *
 * @package ColdSim
-* @copyright (c) 2010 nE0sIghT
+* @copyright (c) 2010-2011 Yuri nE0sIghT Konotopov, http://coldzone.ru
 * @license GNU Affero General Public License, version 3 http://www.gnu.org/licenses/agpl-3.0.html
 *
 */
@@ -90,12 +90,10 @@ class coldsim
 
 	function reorder_tab_chains()
 	{
-		global $reslist;
-
 		$tab_order = array();
 		$index = 0;
-		$index_offset = sizeof($reslist['fleet']) * 2;
-		foreach($reslist['fleet'] as $element)
+		$index_offset = sizeof(vars::get_resources('fleet')) * 2;
+		foreach(vars::get_resources('fleet') as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
 			{
@@ -142,11 +140,9 @@ class coldsim
 
 	function store_current_acs($combo_name = "acs_combobox", $force_save = false)
 	{
-		global $reslist, $resource;
-
 		$acs_combo = $this->glade->get_widget($combo_name);
 		$change_only = $force_save ? false : ((int) $acs_combo->get_active() == $this->acs_slot);
-		foreach($reslist['fleet'] as $element)
+		foreach(vars::get_resources('fleet') as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
 			{
@@ -179,7 +175,7 @@ class coldsim
 			}
 		}
 
-		foreach($reslist['defense'] as $element)
+		foreach(vars::get_resources('defense') as $element)
 		{
 			if($this->glade->get_widget("defense_$element"))
 			{
@@ -203,11 +199,11 @@ class coldsim
 			if($this->glade->get_widget("addition_a_$element"))
 			{
 				if(!$change_only)
-					$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'][$resource[$element]] = (int) $this->glade->get_widget("addition_a_$element")->get_text();
+					$this->fleets[BATTLE_FLEET_ATTACKER][$this->acs_slot]['data'][vars::$db_fields[$element]] = (int) $this->glade->get_widget("addition_a_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_ATTACKER][(int) $acs_combo->get_active()]))
 				{
-					$this->glade->get_widget("addition_a_$element")->set_text($this->fleets[BATTLE_FLEET_ATTACKER][(int) $acs_combo->get_active()]['data'][$resource[$element]]);
+					$this->glade->get_widget("addition_a_$element")->set_text($this->fleets[BATTLE_FLEET_ATTACKER][(int) $acs_combo->get_active()]['data'][vars::$db_fields[$element]]);
 				}
 				else
 				{
@@ -218,11 +214,11 @@ class coldsim
 			if($this->glade->get_widget("addition_d_$element"))
 			{
 				if(!$change_only)
-					$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'][$resource[$element]] = (int) $this->glade->get_widget("addition_d_$element")->get_text();
+					$this->fleets[BATTLE_FLEET_DEFENDER][$this->acs_slot]['data'][vars::$db_fields[$element]] = (int) $this->glade->get_widget("addition_d_$element")->get_text();
 
 				if(isset($this->fleets[BATTLE_FLEET_DEFENDER][(int) $acs_combo->get_active()]))
 				{
-					$this->glade->get_widget("addition_d_$element")->set_text($this->fleets[BATTLE_FLEET_DEFENDER][(int) $acs_combo->get_active()]['data'][$resource[$element]]);
+					$this->glade->get_widget("addition_d_$element")->set_text($this->fleets[BATTLE_FLEET_DEFENDER][(int) $acs_combo->get_active()]['data'][vars::$db_fields[$element]]);
 				}
 				else
 				{
@@ -252,10 +248,8 @@ class coldsim
 
 	function swap_fleet()
 	{
-		global $reslist;
-
 		$tmp = array();
-		foreach($reslist['fleet'] as $element)
+		foreach(vars::get_resources('fleet') as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
 			{
@@ -287,9 +281,7 @@ class coldsim
 
 	function clear_attacker()
 	{
-		global $reslist;
-
-		foreach($reslist['fleet'] as $element)
+		foreach(vars::get_resources('fleet') as $element)
 		{
 			if($this->glade->get_widget("ship_a_$element"))
 			{
@@ -301,9 +293,7 @@ class coldsim
 
 	function clear_defender()
 	{
-		global $reslist;
-
-		foreach($reslist['fleet'] as $element)
+		foreach(vars::get_resources('fleet') as $element)
 		{
 			if($this->glade->get_widget("ship_d_$element"))
 			{
@@ -312,7 +302,7 @@ class coldsim
 			}
 		}
 
-		foreach($reslist['defense'] as $element)
+		foreach(vars::get_resources('defense') as $element)
 		{
 			if($this->glade->get_widget("defense_$element"))
 			{
@@ -324,8 +314,6 @@ class coldsim
 
 	function simulate()
 	{
-		global $pricelist, $resource;
-
 		$this->store_current_acs('acs_combobox', true);
 		$this->simulations = max(1, (int) $this->config->get_setting('simulations'));
 
@@ -349,11 +337,11 @@ class coldsim
 		);
 
 		$source = array(
-			TECH_COMBUSTION		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[TECH_COMBUSTION]],
-			TECH_IMPULSE_DRIVE	=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[TECH_IMPULSE_DRIVE]],
-			TECH_HYPERSPACE_DRIVE	=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[TECH_HYPERSPACE_DRIVE]],
-			RPG_GENERAL		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[RPG_GENERAL]],
-			RPG_AIDEDECAMP		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][$resource[RPG_AIDEDECAMP]],
+			TECH_COMBUSTION		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][vars::$db_fields[TECH_COMBUSTION]],
+			TECH_IMPULSE_DRIVE	=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][vars::$db_fields[TECH_IMPULSE_DRIVE]],
+			TECH_HYPERSPACE_DRIVE	=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][vars::$db_fields[TECH_HYPERSPACE_DRIVE]],
+			RPG_GENERAL		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][vars::$db_fields[RPG_GENERAL]],
+			RPG_AIDEDECAMP		=> (int) $this->fleets[BATTLE_FLEET_ATTACKER][0]['data'][vars::$db_fields[RPG_AIDEDECAMP]],
 		);
 
 		$empty = true;
@@ -460,7 +448,7 @@ class coldsim
 				$this->number_format(floor($this->results['plunder']['metal'] / 2)),
 				$this->number_format(floor($this->results['plunder']['crystal'] / 2)),
 				$this->number_format(floor($this->results['plunder']['deuterium'] / 2)),
-				$this->number_format(ceil((floor($this->results['plunder']['metal'] / 2) + floor($this->results['plunder']['crystal'] / 2) + floor($this->results['plunder']['deuterium'] / 2)) / $pricelist[SHIP_TRANSPORT_BIG]['capacity']))
+				$this->number_format(ceil((floor($this->results['plunder']['metal'] / 2) + floor($this->results['plunder']['crystal'] / 2) + floor($this->results['plunder']['deuterium'] / 2)) / vars::$params[SHIP_TRANSPORT_BIG]['capacity']))
 			)));
 
 			foreach ($this->results['ships'][BATTLE_FLEET_ATTACKER] as $fleet_id => $ships)
@@ -471,7 +459,7 @@ class coldsim
 				foreach($ships['ships'] as $element => $counts)
 				{
 					$count = sizeof($counts) ? (int) round(array_sum($counts)/sizeof($counts), 1) : 0;
-					$this->results['max_resources'][$fleet_id] += (int) ($pricelist[$element]['capacity'] * $count);
+					$this->results['max_resources'][$fleet_id] += (int) (vars::$params[$element]['capacity'] * $count);
 				}
 				$this->results['max_resources']['total'] += $this->results['max_resources'][$fleet_id];
 			}
@@ -600,7 +588,7 @@ class coldsim
 		$this->glade->get_widget('label_result_debris')->set_text($this->encode(sprintf($this->lang['RESULT_DEBRIS'],
 			$this->number_format($debris_metal),
 			$this->number_format($debris_crystal),
-			$this->number_format(ceil(($debris_metal + $debris_crystal) / $pricelist[SHIP_RECYCLER]['capacity']))
+			$this->number_format(ceil(($debris_metal + $debris_crystal) / vars::$params[SHIP_RECYCLER]['capacity']))
 		)));
 
 		$this->glade->get_widget("result_lose_attacker")->set_text($this->encode(sprintf($this->lang['RESULT_LOSE_RESOURCES'],
@@ -646,11 +634,9 @@ class coldsim
 
 	function simulate_missile_attack()
 	{
-		global $reslist;
-
 		$source = $target = array();
 
-		foreach($reslist['defense'] as $element)
+		foreach(vars::get_resources('defense') as $element)
 		{
 			if($element == MISSILE_INTERPLANETARY)
 				continue;
@@ -663,7 +649,7 @@ class coldsim
 
 		list($source, $target) = missiles_attack($source, $target, $this->prime_target);
 
-		foreach($reslist['defense'] as $element)
+		foreach(vars::get_resources('defense') as $element)
 		{
 			if($element == MISSILE_INTERPLANETARY)
 				continue;
@@ -690,7 +676,7 @@ class coldsim
 
 	function import_spy_report()
 	{
-		global $root_path, $reslist;
+		global $root_path;
 
 		$this->import_spy_report_hide();
 
@@ -725,15 +711,15 @@ class coldsim
 
 		foreach(array(TECH_MILITARY, TECH_SHIELD, TECH_DEFENCE, RPG_ADMIRAL) as $element)
 		{
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
+			if(preg_match("/" . $lang['TECH'][$element] . "\s+([\d\.]+)/ui", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget('addition_d_' . $element)->set_text((int) $matches[1]);
 			}
 		}
 
-		foreach($reslist['fleet'] as $element)
+		foreach(vars::get_resources('fleet') as $element)
 		{
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/u", $spy_buffer, $matches))
+			if(preg_match("/" . $lang['TECH'][$element] . "\s+([\d\.]+)/u", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget("ship_d_$element")->set_text((int) $matches[1]);
 			}
@@ -743,12 +729,12 @@ class coldsim
 			}
 		}
 
-		foreach($reslist['defense'] as $element)
+		foreach(vars::get_resources('defense') as $element)
 		{
 			if($element == MISSILE_INTERPLANETARY)
 				continue;
 
-			if(preg_match("/" . $lang['tech'][$element] . "\s+([\d\.]+)/u", $spy_buffer, $matches))
+			if(preg_match("/" . $lang['TECH'][$element] . "\s+([\d\.]+)/u", $spy_buffer, $matches))
 			{
 				$this->glade->get_widget("defense_$element")->set_text((int) $matches[1]);
 			}
@@ -761,9 +747,7 @@ class coldsim
 
 	function show_ships_results()
 	{
-		global $reslist;
-
-		foreach($reslist['fleet'] as $element)
+		foreach(vars::get_resources('fleet') as $element)
 		{
 			$counts = isset($this->results['ships'][BATTLE_FLEET_ATTACKER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_ATTACKER][$this->acs_slot]['ships'][$element] : array();
 			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), $this->precission) : 0;
@@ -806,7 +790,7 @@ class coldsim
 			}
 		}
 
-		foreach($reslist['defense'] as $element)
+		foreach(vars::get_resources('defense') as $element)
 		{
 			$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
 			$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts), $this->precission) : 0;
@@ -842,8 +826,6 @@ class coldsim
 
 	function clear_results()
 	{
-		global $reslist;
-
 		$this->results = array(
 			'battle' => array(
 				BATTLE_FLEET_ATTACKER	=> 0,
@@ -860,7 +842,7 @@ class coldsim
 		{
 			for($acs_slot = 0; $acs_slot < 16; $acs_slot++)
 			{
-				foreach($reslist['fleet'] as $element)
+				foreach(vars::get_resources('fleet') as $element)
 				{
 					$this->results['ships'][$fleet_type][$acs_slot]['ships'][$element] = array();
 				}
@@ -1003,8 +985,6 @@ class coldsim
 
 	function save_data()
 	{
-		global $reslist, $resource;
-
 		$filename = $this->glade->get_widget('window_files')->get_filename();
 
 		if($this->glade->get_widget('files_combobox')->get_active() == 0 && substr(strrchr($filename, '.'), 1) != 'csim')
@@ -1051,10 +1031,10 @@ class coldsim
 		{
 			foreach($data['fleets'][BATTLE_FLEET_ATTACKER] as $acs_slot => $slot_data)
 			{
-				foreach($reslist['tech'] as $element)
+				foreach(vars::get_resources('tech') as $element)
 				{
-					if(isset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]))
-						unset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]);
+					if(isset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][vars::$db_fields[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][vars::$db_fields[$element]]);
 				}
 			}
 		}
@@ -1063,10 +1043,10 @@ class coldsim
 		{
 			foreach($data['fleets'][BATTLE_FLEET_DEFENDER] as $acs_slot => $slot_data)
 			{
-				foreach($reslist['tech'] as $element)
+				foreach(vars::get_resources('tech') as $element)
 				{
-					if(isset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]))
-						unset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]);
+					if(isset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][vars::$db_fields[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][vars::$db_fields[$element]]);
 				}
 			}
 		}
@@ -1075,10 +1055,10 @@ class coldsim
 		{
 			foreach($data['fleets'][BATTLE_FLEET_ATTACKER] as $acs_slot => $slot_data)
 			{
-				foreach($reslist['officier'] as $element)
+				foreach(vars::get_resources('officier') as $element)
 				{
-					if(isset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]))
-						unset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][$resource[$element]]);
+					if(isset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][vars::$db_fields[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_ATTACKER][$acs_slot]['data'][vars::$db_fields[$element]]);
 				}
 			}
 		}
@@ -1087,10 +1067,10 @@ class coldsim
 		{
 			foreach($data['fleets'][BATTLE_FLEET_DEFENDER] as $acs_slot => $slot_data)
 			{
-				foreach($reslist['officier'] as $element)
+				foreach(vars::get_resources('officier') as $element)
 				{
-					if(isset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]))
-						unset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][$resource[$element]]);
+					if(isset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][vars::$db_fields[$element]]))
+						unset($data['fleets'][BATTLE_FLEET_DEFENDER][$acs_slot]['data'][vars::$db_fields[$element]]);
 				}
 			}
 		}

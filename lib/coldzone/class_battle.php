@@ -2,7 +2,7 @@
 /**
 *
 * @package Cold Zone
-* @copyright (c) 2010 nE0sIghT
+* @copyright (c) 2009-2011 Yuri nE0sIghT Konotopov, http://coldzone.ru
 * @license GNU Affero General Public License, version 3 http://www.gnu.org/licenses/agpl-3.0.html
 *
 */
@@ -14,7 +14,7 @@ if (!defined('IN_GAME'))
 
 ini_set('max_execution_time', '120');
 
-define('BATTLE_VERSION', 0.2);
+define('BATTLE_VERSION', 0.3);
 
 define('BATTLE_DRAW', -1);
 define('BATTLE_FLEET_ATTACKER', 0);
@@ -76,15 +76,15 @@ class Battle extends Report
 
 		if($this->debug)
 		{
-			global $reslist, $lang;
+			global $lang;
 
 			$this->log('Класс боя создан');
 			$this->log('Cold Zone версия ' . VERSION);
 			$this->log('Модуль боя версия ' . BATTLE_VERSION);
 			$this->log('Номера кораблей:');
-			foreach($reslist['fleet'] as $fleet_id)
+			foreach(vars::get_resources('fleet') as $fleet_id)
 			{
-				$this->log($fleet_id . ': ' . $lang['tech'][$fleet_id]);
+				$this->log($fleet_id . ': ' . $lang['TECH'][$fleet_id]);
 			}
 			$this->log('Точность брони и щитов: ' . BATTLE_PRECISION);
 		}
@@ -263,8 +263,6 @@ class Battle extends Report
 
 	private function restore_defence()
 	{
-		global $reslist;
-
 		if($this->debug)
 		{
 			$this->log('Восстановление обороны...');
@@ -275,7 +273,7 @@ class Battle extends Report
 		{
 			foreach($fleet as $element => $count)
 			{
-				if(in_array($element, $reslist['defense']))
+				if(in_array($element, vars::get_resources('defense')))
 				{
 					if(!in_array($element, array(MISSILE_INTERCEPTOR, MISSILE_INTERPLANETARY)))
 					{
@@ -361,8 +359,6 @@ class Battle extends Report
 
 	private function fleet_group_attack($source, $target_type)
 	{
-		global $pricelist, $CombatCaps;
-
 		if($this->debug)
 		{
 			$this->log('Атакуют корабли: ' . $source['element']);
@@ -401,13 +397,13 @@ class Battle extends Report
 
 				// [fleet_type][fleet_id][tech] = level
 				$source['bonus_attack']		= (1 + (0.1 * ($this->tech[$source_type][$source['fleet_id']]['attack']) + (0.05 * $this->tech[$source_type][$source['fleet_id']]['rpg_admiral'])));
-				$source['single_attack']	= $CombatCaps[$source['element']]['attack'] * $source['bonus_attack'];
+				$source['single_attack']	= vars::$battle_caps[$source['element']]['attack'] * $source['bonus_attack'];
 
 				$target['bonus_hull']		= (1 + (0.1 * ($this->tech[$target_type][$target['fleet_id']]['defence']) + (0.05 * $this->tech[$target_type][$target['fleet_id']]['rpg_admiral'])));
 				$target['bonus_shield']		= (1 + (0.1 * ($this->tech[$target_type][$target['fleet_id']]['shield']) + (0.05 * $this->tech[$target_type][$target['fleet_id']]['rpg_admiral'])));
 
-				$target['single_hull']		= (($pricelist[$target['element']]['metal'] + $pricelist[$target['element']]['crystal']) / 10) * $target['bonus_hull'];
-				$target['single_shield']	= $CombatCaps[$target['element']]['shield'] * $target['bonus_shield'];
+				$target['single_hull']		= ((vars::$params[$target['element']]['metal'] + vars::$params[$target['element']]['crystal']) / 10) * $target['bonus_hull'];
+				$target['single_shield']	= vars::$battle_caps[$target['element']]['shield'] * $target['bonus_shield'];
 
 				if($this->debug)
 				{
@@ -693,14 +689,12 @@ class Battle extends Report
 
 	private function fleet_rapidfire($source_type, $source, $target_element)
 	{
-		global $CombatCaps;
-
-		if(!isset($CombatCaps[$source['element']]['sd'][$target_element]) || !$CombatCaps[$source['element']]['sd'][$target_element])
+		if(!isset(vars::$battle_caps[$source['element']]['sd'][$target_element]) || !vars::$battle_caps[$source['element']]['sd'][$target_element])
 		{
 			$this->error('Не задан скорострел юнита ' . $source['element'] . ' по юниту ' . $target_element . '. Принят 1');
-			$CombatCaps[$source['element']]['sd'][$target_element] = 1;
+			vars::$battle_caps[$source['element']]['sd'][$target_element] = 1;
 		}
-		$chance = (double)(((int)$CombatCaps[$source['element']]['sd'][$target_element] - 1) / (int)$CombatCaps[$source['element']]['sd'][$target_element]);
+		$chance = (double)(((int)vars::$battle_caps[$source['element']]['sd'][$target_element] - 1) / (int)vars::$battle_caps[$source['element']]['sd'][$target_element]);
 
 		if($chance > 0.0)
 		{
@@ -1127,8 +1121,6 @@ class Battle extends Report
 
 	private function remove_broken_ships()
 	{
-		global $pricelist, $reslist;
-
 		if($this->debug)
 		{
 			$this->log('Убираем поломаные корабли...');
@@ -1148,13 +1140,13 @@ class Battle extends Report
 							$total_count = 0;
 							foreach($shield as $shield_percent => $count)
 								$total_count += $count;
-							$this->debris['total'][$fleet_type]['metal']	+= $pricelist[$element]['metal'] * $total_count;
-							$this->debris['total'][$fleet_type]['crystal']	+= $pricelist[$element]['crystal'] * $total_count;
+							$this->debris['total'][$fleet_type]['metal']	+= vars::$params[$element]['metal'] * $total_count;
+							$this->debris['total'][$fleet_type]['crystal']	+= vars::$params[$element]['crystal'] * $total_count;
 
-							if(!in_array($element, $reslist['defense']) && $fleet_type == BATTLE_FLEET_DEFENDER)
+							if(!in_array($element, vars::get_resources('defense')) && $fleet_type == BATTLE_FLEET_DEFENDER)
 							{
-								$this->debris['nondefence'][$fleet_type]['metal']	+= $pricelist[$element]['metal'] * $total_count;
-								$this->debris['nondefence'][$fleet_type]['crystal']	+= $pricelist[$element]['crystal'] * $total_count;
+								$this->debris['nondefence'][$fleet_type]['metal']	+= vars::$params[$element]['metal'] * $total_count;
+								$this->debris['nondefence'][$fleet_type]['crystal']	+= vars::$params[$element]['crystal'] * $total_count;
 							}
 							unset($this->shield[$fleet_type][$fleet_id][$element][$hull_percent]);
 						}
@@ -1279,8 +1271,6 @@ class Battle extends Report
 
 	private function fill_fleet($fleets, $fleet_type)
 	{
-		global $resource;
-
 		if($this->debug)
 		{
 			$this->log('Заполняем флоты ' . ($fleet_type == BATTLE_FLEET_ATTACKER ? 'нападающих' : 'обороняющихся') . '...', false);
@@ -1301,10 +1291,10 @@ class Battle extends Report
 			}
 			
 			$this->tech[$fleet_type][$fleet_id]				= array(
-				'attack'	=> $ships['data'][$resource[TECH_MILITARY]],
-				'defence'	=> $ships['data'][$resource[TECH_DEFENCE]],
-				'shield'	=> $ships['data'][$resource[TECH_SHIELD]],
-				'rpg_admiral'	=> $ships['data'][$resource[RPG_ADMIRAL]]
+				'attack'	=> $ships['data'][vars::$db_fields[TECH_MILITARY]],
+				'defence'	=> $ships['data'][vars::$db_fields[TECH_DEFENCE]],
+				'shield'	=> $ships['data'][vars::$db_fields[TECH_SHIELD]],
+				'rpg_admiral'	=> $ships['data'][vars::$db_fields[RPG_ADMIRAL]],
 			);
 			$this->users[$fleet_type][$fleet_id]['username'] = $ships['data']['username'];
 			if($fleet_type == BATTLE_FLEET_ATTACKER)
@@ -1410,7 +1400,7 @@ class Report
 
 	function generate_report($metal = 0, $crystal = 0, $deuterium = 0, $battle_time = 0, $is_moon = false, $moon_destroyed = false)
 	{
-		global $CombatCaps, $pricelist, $lang;
+		global $lang;
 
 		$this->html = '<center>' . date('d M Y, в H:i:s', $battle_time ? $battle_time : time()) . ' во Вселенной ' . UNIVERSE . ' произошла битва между флотами.<br /><br />';
 		foreach($this->report as $round => $data)
@@ -1444,11 +1434,11 @@ class Report
 							$bonus_hull		= (1 + (0.1 * ($this->tech[$fleet_type][$fleet_id]['defence']) + (0.05 * $this->tech[$fleet_type][$fleet_id]['rpg_admiral'])));
 							$bonus_shield		= (1 + (0.1 * ($this->tech[$fleet_type][$fleet_id]['shield']) + (0.05 * $this->tech[$fleet_type][$fleet_id]['rpg_admiral'])));
 
-							$row_attack .= '<th>' . (function_exists('pretty_number') ? pretty_number($CombatCaps[$element]['attack'] * $bonus_attack, false, 1) : $CombatCaps[$element]['attack'] * $bonus_attack) . '</th>';
-							$row_shield .= '<th>' . (function_exists('pretty_number') ? pretty_number($CombatCaps[$element]['shield'] * $bonus_shield, false) : $CombatCaps[$element]['shield'] * $bonus_shield) . '</th>';
-							$row_hull .= '<th>' . (function_exists('pretty_number') ? pretty_number((($pricelist[$element]['metal'] + $pricelist[$element]['crystal']) / 10) * $bonus_hull, false) : (($pricelist[$element]['metal'] + $pricelist[$element]['crystal']) / 10) * $bonus_hull) . '</th>';
+							$row_attack .= '<th>' . (function_exists('pretty_number') ? pretty_number(vars::$battle_caps[$element]['attack'] * $bonus_attack, false, 1) : vars::$battle_caps[$element]['attack'] * $bonus_attack) . '</th>';
+							$row_shield .= '<th>' . (function_exists('pretty_number') ? pretty_number(vars::$battle_caps[$element]['shield'] * $bonus_shield, false) : vars::$battle_caps[$element]['shield'] * $bonus_shield) . '</th>';
+							$row_hull .= '<th>' . (function_exists('pretty_number') ? pretty_number(((vars::$params[$element]['metal'] + vars::$params[$element]['crystal']) / 10) * $bonus_hull, false) : ((vars::$params[$element]['metal'] + vars::$params[$element]['crystal']) / 10) * $bonus_hull) . '</th>';
 
-							$row_ships .= '<th>' . $lang['tech'][$element] . '</th>';
+							$row_ships .= '<th>' . $lang['TECH'][$element] . '</th>';
 							$row_count .= '<th>' . (function_exists('pretty_number') ?
 											pretty_number($count)
 										:
