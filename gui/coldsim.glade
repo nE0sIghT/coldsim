@@ -2847,6 +2847,16 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
+                      <widget class="GtkImageMenuItem" id="imagemenuitem3">
+                        <property name="label" translatable="yes">Проверить обновления...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="show_update" swapped="no"/>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkImageMenuItem" id="imagemenuitem">
                         <property name="label" translatable="yes">Настройки...</property>
                         <property name="visible">True</property>
@@ -2878,23 +2888,6 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                   <widget class="GtkMenu" id="menu3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem3">
-                        <property name="label" translatable="yes">Проверить обновления</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="use_stock">False</property>
-                        <signal name="activate" handler="show_update" swapped="no"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image5">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-refresh</property>
-                          </widget>
-                        </child>
-                      </widget>
-                    </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="imagemenuitem10">
                         <property name="label">О программе</property>
