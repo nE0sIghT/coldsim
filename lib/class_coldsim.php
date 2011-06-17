@@ -314,6 +314,8 @@ class coldsim
 
 	function simulate()
 	{
+		$this->glade->get_widget('menubar')->deactivate();
+
 		$this->store_current_acs('acs_combobox', true);
 		$this->simulations = max(1, (int) $this->config->get_setting('simulations'));
 
@@ -572,6 +574,9 @@ class coldsim
 
 		if($this->results['battle'][BATTLE_DRAW])
 		{
+			if($this->results['battle'][BATTLE_FLEET_ATTACKER] || $this->results['battle'][BATTLE_FLEET_DEFENDER])
+				$result_battle .= "\n";
+
 			$result_battle .= sprintf($this->lang['RESULT_BATTLE_DRAW'], round($this->results['battle'][BATTLE_DRAW] * 100/$this->simulations));
 		}
 
