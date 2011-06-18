@@ -639,7 +639,7 @@ License exception:
 URL link "http://coldzone.ru" must be present in any modification of this program
 </property>
     <property name="authors">nE0sIghT &lt;admin@coldzone.ru&gt;</property>
-    <property name="translator_credits" translatable="yes">BrainsFucker
+    <property name="translator_credits" translatable="yes">BrainsFucker &lt;bfffff@mail.ru&gt;
 nE0sIghT &lt;admin@coldzone.ru&gt;</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
