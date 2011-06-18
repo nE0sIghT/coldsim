@@ -15,9 +15,7 @@ if (!defined('IN_SIM'))
 
 function missiles_attack($source, $target, $prime_target = false)
 {
-	global $CombatCaps, $reslist, $pricelist;
-
-	$prime_target = (int) array_search($prime_target, $reslist['defense']);
+	$prime_target = (int) array_search($prime_target, vars::get_resources('defense'));
 	if ($target[MISSILE_INTERCEPTOR] >= $source[MISSILE_INTERPLANETARY])
 	{
 		$target[MISSILE_INTERCEPTOR] = $target[MISSILE_INTERCEPTOR] - $source[MISSILE_INTERPLANETARY];
@@ -30,30 +28,30 @@ function missiles_attack($source, $target, $prime_target = false)
 			$target[MISSILE_INTERCEPTOR] = 0;
 		}
 		
-		$source_single_damage = $CombatCaps[MISSILE_INTERPLANETARY]['attack'] * (1 + ($source[TECH_MILITARY] / 10));
+		$source_single_damage = vars::$battle_caps[MISSILE_INTERPLANETARY]['attack'] * (1 + ($source[TECH_MILITARY] / 10));
 		$source_damage = $source[MISSILE_INTERPLANETARY] * $source_single_damage;
-		for($next_target = 0, $current_target = $prime_target; $next_target < count($reslist['defense']); $next_target++, $current_target = $next_target)
+		for($next_target = 0, $current_target = $prime_target; $next_target < count(vars::get_resources('defense')); $next_target++, $current_target = $next_target)
 		{
 			if($prime_target == $current_target && $next_target != 0)
 				continue;
 			
 			// Old cold-zone/xnova had broken MIP code, that can turn defence under zero
 			// Ready to remove? nS
-			if($target[$reslist['defense'][$current_target]] < 0)
-				$target[$reslist['defense'][$current_target]] = 0;
+			if($target[array_value(vars::get_resources('defense'), $current_target)] < 0)
+				$target[array_value(vars::get_resources('defense'), $current_target)] = 0;
 			
-			$target_single_hull	= (($pricelist[$reslist['defense'][$current_target]]['metal'] + $pricelist[$reslist['defense'][$current_target]]['crystal'])/10) * (1 + ($target[TECH_DEFENCE] / 10));
-			$target_hull		= $target_single_hull * $target[$reslist['defense'][$current_target]];
+			$target_single_hull	= ((vars::$params[array_value(vars::get_resources('defense'), $current_target)]['metal'] + vars::$params[array_value(vars::get_resources('defense'), $current_target)]['crystal'])/10) * (1 + ($target[TECH_DEFENCE] / 10));
+			$target_hull		= $target_single_hull * $target[array_value(vars::get_resources('defense'), $current_target)];
 			
 			if($source_damage >= $target_hull)
 			{
-				$target[$reslist['defense'][$current_target]] = 0;
+				$target[array_value(vars::get_resources('defense'), $current_target)] = 0;
 				$source_damage -= $target_hull;
 			}
 			elseif($source_damage >= $target_single_hull)
 			{
 				$target_count = floor($source_damage / $target_single_hull);
-				$target[$reslist['defense'][$current_target]] -= $target_count;
+				$target[array_value(vars::get_resources('defense'), $current_target)] -= $target_count;
 				$source_damage -= $target_count * $target_single_hull;
 			}
 		}
@@ -64,10 +62,8 @@ function missiles_attack($source, $target, $prime_target = false)
 
 function get_ship_speed($element, $source)
 {
-	global $reslist, $pricelist;
-
 	$speed = 0;
-	if(!in_array($element, $reslist['fleet']))
+	if(!in_array($element, vars::get_resources('fleet')))
 	{
 		return $speed;
 	}
@@ -77,39 +73,39 @@ function get_ship_speed($element, $source)
 		case SHIP_TRANSPORT_SMALL:
 			if ($source[TECH_IMPULSE_DRIVE] >= 5)
 			{
-				$speed  = $pricelist[$element]['speed2'] + (($pricelist[$element]['speed2'] * $source[TECH_IMPULSE_DRIVE]) * 0.2);
+				$speed  = vars::$params[$element]['speed2'] + ((vars::$params[$element]['speed2'] * $source[TECH_IMPULSE_DRIVE]) * 0.2);
 			}
 			else
 			{
-				$speed  = $pricelist[$element]['speed']  + (($pricelist[$element]['speed'] * $source[TECH_COMBUSTION]) * 0.1);
+				$speed  = vars::$params[$element]['speed']  + ((vars::$params[$element]['speed'] * $source[TECH_COMBUSTION]) * 0.1);
 			}
 			break;
 		case SHIP_TRANSPORT_BIG:
 		case SHIP_HUNTER_LIGHT:
 		case SHIP_RECYCLER:
 		case SHIP_SPY:
-			$speed = $pricelist[$element]['speed'] + (($pricelist[$element]['speed'] * $source[TECH_COMBUSTION]) * 0.1);
+			$speed = vars::$params[$element]['speed'] + ((vars::$params[$element]['speed'] * $source[TECH_COMBUSTION]) * 0.1);
 			break;
 		case SHIP_HUNTER_HEAVY:
 		case SHIP_CRUSHER:
 		case SHIP_COLONIZER:
-			$speed = $pricelist[$element]['speed'] + (($pricelist[$element]['speed'] * $source[TECH_IMPULSE_DRIVE]) * 0.2);
+			$speed = vars::$params[$element]['speed'] + ((vars::$params[$element]['speed'] * $source[TECH_IMPULSE_DRIVE]) * 0.2);
 			break;
 		case SHIP_BOMBER:
 			if ($source[TECH_HYPERSPACE_DRIVE] >= 8)
 			{
-				$speed = $pricelist[$element]['speed2'] + (($pricelist[$element]['speed2'] * $source[TECH_HYPERSPACE_DRIVE]) * 0.3);
+				$speed = vars::$params[$element]['speed2'] + ((vars::$params[$element]['speed2'] * $source[TECH_HYPERSPACE_DRIVE]) * 0.3);
 			}
 			else
 			{
-				$speed = $pricelist[$element]['speed']  + (($pricelist[$element]['speed'] * $source[TECH_IMPULSE_DRIVE]) * 0.2);
+				$speed = vars::$params[$element]['speed']  + ((vars::$params[$element]['speed'] * $source[TECH_IMPULSE_DRIVE]) * 0.2);
 			}
 			break;
 		case SHIP_LINKOR:
 		case SHIP_DESTRUCTOR:
 		case SHIP_DEATH_STAR:
 		case SHIP_LINECRUSHER:
-			$speed = $pricelist[$element]['speed'] + (($pricelist[$element]['speed'] * $source[TECH_HYPERSPACE_DRIVE]) * 0.3);
+			$speed = vars::$params[$element]['speed'] + ((vars::$params[$element]['speed'] * $source[TECH_HYPERSPACE_DRIVE]) * 0.3);
 			break;
 	}
 
@@ -132,9 +128,7 @@ function get_fleet_speed($fleet, $source)
 
 function get_ship_consumption($element, $source)
 {
-	global $pricelist;
-
-	return ($source[TECH_IMPULSE_DRIVE] >= 5 && isset($pricelist[$element]['consumption2'])) ? $pricelist[$element]['consumption2'] : $pricelist[$element]['consumption'];
+	return ($source[TECH_IMPULSE_DRIVE] >= 5 && isset(vars::$params[$element]['consumption2'])) ? vars::$params[$element]['consumption2'] : vars::$params[$element]['consumption'];
 }
 
 function get_fleet_consumption($fleet, $source, $duration, $distance, $fleet_speed, $mission = 0, $holding_time = 0, $stay_consumption = 0)
@@ -197,6 +191,11 @@ function secs2time ($data)
 	$seconds = floor($data % 60);
 
 	return array(sprintf("%02u", $hours), sprintf("%02u", $minutes), sprintf("%02u", $seconds));
+}
+
+function array_value($array, $key)
+{
+	return $array[$key];
 }
 
 ?>
