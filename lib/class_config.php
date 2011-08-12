@@ -58,6 +58,14 @@ class config
 		// Upgrade config if needed
 		if(version_compare($this->data['version'], VERSION, "<"))
 		{
+			switch($this->data['version'])
+			{
+				case "0.4":
+				case "0.5":
+				case "0.5.1":
+					$this->data['threaded']	= 0;
+					$this->data['threads']	= 0;
+			}
 			$this->data['version'] = $this->default['version'];
 		}
 	}

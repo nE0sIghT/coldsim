@@ -19,22 +19,26 @@ if(!class_exists('Battle'))
 
 class coldsim
 {
-	private $glade			= null;
-	private $config			= null;
-	private $acs_slot		= 0;
-	private $game_factor		= 1;
-	private $fleets			= array(
-		BATTLE_FLEET_ATTACKER		=> array(),
-		BATTLE_FLEET_DEFENDER		=> array(),
+	private $glade				= null;
+	private $config				= null;
+	private $acs_slot			= 0;
+	private $game_factor			= 1;
+	private $fleets				= array(
+		BATTLE_FLEET_ATTACKER			=> array(),
+		BATTLE_FLEET_DEFENDER			=> array(),
 	);
-	private $simulations		= 20;
+	private $simulations			= 20;
 	private $results;
-	private $prime_target		= 0;
+	private $prime_target			= 0;
 	private $spy_buffer;
-	private $file_filter		= null;
-	private $files_action_signal	= null;
-	private $files_choose_signal	= null;
-	private $precission		= 1;
+	private $file_filter			= null;
+	private $files_action_signal		= null;
+	private $files_choose_signal		= null;
+	private $precission			= 1;
+
+	private $completed_simulations		= 0;
+	private $simulation_threads		= array();
+	private $simulation_threads_return	= array();
 
 	private $lang			= array(
 		'RESULT_BATTLE_ATTACKER'	=> '| Победа атакующего (%u%%) |',
@@ -312,6 +316,72 @@ class coldsim
 		}
 	}
 
+	function run_simulation_thread($attackers, $defenders)
+	{
+		global $root_path;
+
+		if(WIN_HOST)
+		{
+			$pid_hash = md5(mt_rand());
+
+			shell_exec('start "' . $root_path . 'php\php-win.exe ' . $root_path . 'bin\simulation.php ' . serialize(array($attackers, $defenders)) . ' ' . $pid_hash);
+
+			$pid = 0;
+			while(!$pid)
+			{
+				if(file_exists(sys_get_temp_dir() . "csim_" . $pid_hash))
+				{
+					$pid = (int) file_get_contents(sys_get_temp_dir() . "csim_" . $pid_hash);
+					@unlink(sys_get_temp_dir() . "csim_" . $pid_hash);
+				}
+			}
+		}
+		else
+		{
+			list(, $pid) = explode(" ", shell_exec($root_path . 'bin\simulation.php ' . serialize(array($attackers, $defenders)) . ' &'));
+		}
+
+		$this->simulation_threads[$pid] = true;
+	}
+
+	function check_simulation_threads()
+	{
+		$usleep = true;
+		foreach($this->simulation_threads as $pid)
+		{
+			if(file_exists(sys_get_temp_dir() . "csim_$pid"))
+			{
+				$this->simulation_threads_return = @unserialize(file_get_contents(sys_get_temp_dir() . "csim_$pid"));
+				$this->completed_simulations++;
+				@unlink(sys_get_temp_dir() . "csim_$pid");
+
+				unset($this->simulation_threads[$pid]);
+				$usleep = false;
+			}
+		}
+
+		if($usleep)
+			usleep(100);
+	}
+
+	function simulation_threads_count()
+	{
+		if($this->config->get_setting('threads') < 1)
+		{
+			$cpus = 0;
+			if(WIN_HOST)
+				$cpus = (int) getenv("NUMBER_OF_PROCESSORS");
+			else
+			{
+				$cpus = (int) exec("cat /proc/cpuinfo | grep -c processor");
+			}
+
+			return max(1, $cpus);
+		}
+		else
+			return $this->config->get_setting('threads');
+	}
+
 	function simulate()
 	{
 		$this->glade->get_widget('menubar')->deactivate();
@@ -405,36 +475,83 @@ class coldsim
 			$fleet_seconds
 		)));
 
-		$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
-		for($i = 0; $i < $this->simulations; $i++)
+		if(!$this->config->get_setting('threaded') || simulation_threads_count() <= 1)
 		{
-			$start_time = microtime(true);
-			$battle->calculate();
-			$calculate_time[] = microtime(true) - $start_time;
-
-			for($fleet_type = BATTLE_FLEET_ATTACKER; $fleet_type != BATTLE_DRAW; $fleet_type = ($fleet_type == BATTLE_FLEET_ATTACKER ? BATTLE_FLEET_DEFENDER : BATTLE_DRAW))
+			$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
+			for($i = 0; $i < $this->simulations; $i++)
 			{
-				if($battle->fleet[$fleet_type])
+				$start_time = microtime(true);
+				$battle->calculate();
+				$calculate_time[] = microtime(true) - $start_time;
+	
+				for($fleet_type = BATTLE_FLEET_ATTACKER; $fleet_type != BATTLE_DRAW; $fleet_type = ($fleet_type == BATTLE_FLEET_ATTACKER ? BATTLE_FLEET_DEFENDER : BATTLE_DRAW))
 				{
-					foreach($battle->fleet[$fleet_type] as $acs_slot => $ships)
+					if($battle->fleet[$fleet_type])
 					{
-						foreach($ships as $element => $count)
+						foreach($battle->fleet[$fleet_type] as $acs_slot => $ships)
 						{
-							$this->results['ships'][$fleet_type][$acs_slot]['ships'][$element][] = $count;
+							foreach($ships as $element => $count)
+							{
+								$this->results['ships'][$fleet_type][$acs_slot]['ships'][$element][] = $count;
+							}
 						}
 					}
 				}
+	
+				$this->results['battle'][$battle->winner]++;
+				$this->results['rounds'][] = $battle->round + 1;
+				$this->results['moon_chance'][] = $battle->moon_chance;
+	                                             
+				$debris['metal'][] = $battle->debris['metal'];
+				$debris['crystal'][] = $battle->debris['crystal'];
+				$debris['total'][BATTLE_FLEET_ATTACKER]['metal'][] = $battle->debris['total'][BATTLE_FLEET_ATTACKER]['metal'];
+				$debris['total'][BATTLE_FLEET_ATTACKER]['crystal'][] = $battle->debris['total'][BATTLE_FLEET_ATTACKER]['crystal'];
+				$debris['total'][BATTLE_FLEET_DEFENDER]['metal'][] = $battle->debris['total'][BATTLE_FLEET_DEFENDER]['metal'];
+				$debris['total'][BATTLE_FLEET_DEFENDER]['crystal'][] = $battle->debris['total'][BATTLE_FLEET_DEFENDER]['crystal'];
+			}
+		}
+		else
+		{
+			$this->completed_simulations = 0;
+			while($completed_simulations < $this->simulations)
+			{
+				if(sizeof($this->simulation_threads) <= simulation_threads_count())
+				{
+					run_simulation_thread($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
+				}
+				else
+				{
+					check_simulation_threads();
+				}
 			}
 
-			$this->results['battle'][$battle->winner]++;
-			$this->results['rounds'][] = $battle->round + 1;
-                                             
-			$debris['metal'][] = $battle->debris['metal'];
-			$debris['crystal'][] = $battle->debris['crystal'];
-			$debris['total'][BATTLE_FLEET_ATTACKER]['metal'][] = $battle->debris['total'][BATTLE_FLEET_ATTACKER]['metal'];
-			$debris['total'][BATTLE_FLEET_ATTACKER]['crystal'][] = $battle->debris['total'][BATTLE_FLEET_ATTACKER]['crystal'];
-			$debris['total'][BATTLE_FLEET_DEFENDER]['metal'][] = $battle->debris['total'][BATTLE_FLEET_DEFENDER]['metal'];
-			$debris['total'][BATTLE_FLEET_DEFENDER]['crystal'][] = $battle->debris['total'][BATTLE_FLEET_DEFENDER]['crystal'];
+			foreach($this->simulation_threads_return as $battle)
+			{
+				for($fleet_type = BATTLE_FLEET_ATTACKER; $fleet_type != BATTLE_DRAW; $fleet_type = ($fleet_type == BATTLE_FLEET_ATTACKER ? BATTLE_FLEET_DEFENDER : BATTLE_DRAW))
+				{
+					if($battle['fleet'][$fleet_type])
+					{
+						foreach($battle['fleet'][$fleet_type] as $acs_slot => $ships)
+						{
+							foreach($ships as $element => $count)
+							{
+								$this->results['ships'][$fleet_type][$acs_slot]['ships'][$element][] = $count;
+							}
+						}
+					}
+				}
+	
+				$this->results['battle'][$battle['winner']]++;
+				$this->results['rounds'][] = $battle['round'] + 1;
+				$this->results['moon_chance'][] = $battle['moon_chance'];
+
+				$debris['metal'][] = $battle['debris']['metal'];
+				$debris['crystal'][] = $battle['debris']['crystal'];
+				$debris['total'][BATTLE_FLEET_ATTACKER]['metal'][] = $battle['debris']['total'][BATTLE_FLEET_ATTACKER]['metal'];
+				$debris['total'][BATTLE_FLEET_ATTACKER]['crystal'][] = $battle['debris']['total'][BATTLE_FLEET_ATTACKER]['crystal'];
+				$debris['total'][BATTLE_FLEET_DEFENDER]['metal'][] = $battle['debris']['total'][BATTLE_FLEET_DEFENDER]['metal'];
+				$debris['total'][BATTLE_FLEET_DEFENDER]['crystal'][] = $battle['debris']['total'][BATTLE_FLEET_DEFENDER]['crystal'];
+			}
 		}
 
 		$this->results['plunder']['metal'] = (int) $this->glade->get_widget("target_metal")->get_text();
@@ -585,7 +702,7 @@ class coldsim
 
 		$this->show_ships_results();
 
-		$this->glade->get_widget("moon_chance")->set_text(round($battle->moon_chance) . '%');
+		$this->glade->get_widget("moon_chance")->set_text(round(array_sum($this->results['moon_chance']) / sizeof($this->results['moon_chance'])) . '%');
 
 		$debris_metal = round(array_sum($debris['metal'])/sizeof($debris['metal']));
 		$debris_crystal = round(array_sum($debris['crystal'])/sizeof($debris['crystal']));
@@ -981,7 +1098,7 @@ class coldsim
 							$this->show_ships_results();
 						}
 					}
-				} 
+				}
 			}
 		}
 
