@@ -10,7 +10,7 @@
 
 define("IN_SIM", true);
 define("IN_GAME", true);
-define("VERSION", '0.5.1');
+define("VERSION", '1.0');
 
 define('MAX_PLAYER_PLANETS',	0); // Suppress undefined warning
 define('HOST',			'');
@@ -52,6 +52,14 @@ $coldsim = new coldsim($glade);
 $glade->signal_autoconnect_instance($coldsim);
 
 Gtk::main();
+
+function temp_dir()
+{
+	if(substr(sys_get_temp_dir(), strlen(sys_get_temp_dir()) - 1) !== DIRECTORY_SEPARATOR)
+		return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
+	else
+		return sys_get_temp_dir();
+}
 
 function get_root_path()
 {

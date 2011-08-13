@@ -324,21 +324,24 @@ class coldsim
 		{
 			$pid_hash = md5(mt_rand());
 
-			shell_exec('start "' . $root_path . 'php\php-win.exe ' . $root_path . 'bin\simulation.php ' . serialize(array($attackers, $defenders)) . ' ' . $pid_hash);
+			pclose(popen('start "' . $pid_hash . '" "' . str_replace("/", "\\", $root_path) . 'php\php-win.exe" "' . str_replace("/", "\\", $root_path) . 'bin\simulation.php" ' . base64_encode(serialize(array($attackers, $defenders))) . ' ' . $pid_hash, r));
 
 			$pid = 0;
 			while(!$pid)
 			{
-				if(file_exists(sys_get_temp_dir() . "csim_" . $pid_hash))
+				if(file_exists(temp_dir() . "csim_" . $pid_hash))
 				{
-					$pid = (int) file_get_contents(sys_get_temp_dir() . "csim_" . $pid_hash);
-					@unlink(sys_get_temp_dir() . "csim_" . $pid_hash);
+					$pid = (int) file_get_contents(temp_dir() . "csim_" . $pid_hash);
+					@unlink(temp_dir() . "csim_" . $pid_hash);
 				}
+				else
+					usleep(100);
 			}
 		}
 		else
 		{
-			list(, $pid) = explode(" ", shell_exec($root_path . 'bin\simulation.php ' . serialize(array($attackers, $defenders)) . ' &'));
+			exec($root_path . 'bin/simulation.php "' . base64_encode(serialize(array($attackers, $defenders))) . '" > /dev/null 2>&1 & echo $!', $out);
+			list($pid) = explode(" ", implode(PHP_EOL, $out));
 		}
 
 		$this->simulation_threads[$pid] = true;
@@ -347,13 +350,13 @@ class coldsim
 	function check_simulation_threads()
 	{
 		$usleep = true;
-		foreach($this->simulation_threads as $pid)
+		foreach($this->simulation_threads as $pid => $true)
 		{
-			if(file_exists(sys_get_temp_dir() . "csim_$pid"))
+			if(file_exists(temp_dir() . "csim_$pid"))
 			{
-				$this->simulation_threads_return = @unserialize(file_get_contents(sys_get_temp_dir() . "csim_$pid"));
+				$this->simulation_threads_return[] = @unserialize(file_get_contents(temp_dir() . "csim_$pid"));
 				$this->completed_simulations++;
-				@unlink(sys_get_temp_dir() . "csim_$pid");
+				@unlink(temp_dir() . "csim_$pid");
 
 				unset($this->simulation_threads[$pid]);
 				$usleep = false;
@@ -361,7 +364,7 @@ class coldsim
 		}
 
 		if($usleep)
-			usleep(100);
+			usleep(300);
 	}
 
 	function simulation_threads_count()
@@ -475,7 +478,7 @@ class coldsim
 			$fleet_seconds
 		)));
 
-		if(!$this->config->get_setting('threaded') || simulation_threads_count() <= 1)
+		if(!$this->config->get_setting('threaded') || $this->simulation_threads_count() <= 1)
 		{
 			$battle = new Battle($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 			for($i = 0; $i < $this->simulations; $i++)
@@ -513,15 +516,15 @@ class coldsim
 		else
 		{
 			$this->completed_simulations = 0;
-			while($completed_simulations < $this->simulations)
+			while($this->completed_simulations + sizeof($this->simulation_threads) < $this->simulations)
 			{
-				if(sizeof($this->simulation_threads) <= simulation_threads_count())
+				if(sizeof($this->simulation_threads) < $this->simulation_threads_count())
 				{
-					run_simulation_thread($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
+					$this->run_simulation_thread($this->fleets[BATTLE_FLEET_ATTACKER], $this->fleets[BATTLE_FLEET_DEFENDER]);
 				}
 				else
 				{
-					check_simulation_threads();
+					$this->check_simulation_threads();
 				}
 			}
 
@@ -544,6 +547,7 @@ class coldsim
 				$this->results['battle'][$battle['winner']]++;
 				$this->results['rounds'][] = $battle['round'] + 1;
 				$this->results['moon_chance'][] = $battle['moon_chance'];
+				$calculate_time[] = $battle['calculate_time'];
 
 				$debris['metal'][] = $battle['debris']['metal'];
 				$debris['crystal'][] = $battle['debris']['crystal'];

@@ -27,7 +27,6 @@ require($root_path . "lib/class_config.php");
 set_time_limit(0); // Override class_battle.php value
 @ini_set("memory_limit", -1);
 
-
 if($argc < 2)
 {
 	echo "Cold Zone battle calculator, version " . VERSION . PHP_EOL;
@@ -35,7 +34,7 @@ if($argc < 2)
 	exit;
 }
 
-$data_ary = @unserialize($argv[1]);
+$data_ary = @unserialize(base64_decode($argv[1]));
 
 if(!is_array($data_ary) || sizeof($data_ary) != 2)
 {
@@ -45,23 +44,33 @@ if(!is_array($data_ary) || sizeof($data_ary) != 2)
 
 if($argc == 3)
 {
-	file_put_contents(sys_get_temp_dir() . "csim_" . $argv[2], getmypid());
+	file_put_contents(temp_dir() . "ttt", "tt");
+	file_put_contents(temp_dir() . "csim_" . $argv[2], getmypid());
 }
 
 $battle = new Battle($data_ary[0], $data_ary[1]);
 $start_time = microtime(true);
 $battle->calculate();
-$calculate_time[] = microtime(true) - $start_time;
+$calculate_time = microtime(true) - $start_time;
 
-file_put_contents(sys_get_temp_dir() . "csim_" . getmypid(), serialize(
+file_put_contents(temp_dir() . "csim_" . getmypid(), serialize(
 	array(
-		'fleet'		=> $battle->fleet,
-		'debris'	=> $battle->debris,
-		'winner'	=> $battle->winner,
-		'debris'	=> $battle->debris,
-		'moon_chance'	=> $battle->moon_chance,
+		'fleet'			=> $battle->fleet,
+		'debris'		=> $battle->debris,
+		'winner'		=> $battle->winner,
+		'debris'		=> $battle->debris,
+		'moon_chance'		=> $battle->moon_chance,
+		'calculate_time'	=> $calculate_time,
 	)
 ));
+
+function temp_dir()
+{
+	if(substr(sys_get_temp_dir(), strlen(sys_get_temp_dir()) - 1) !== DIRECTORY_SEPARATOR)
+		return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
+	else
+		return sys_get_temp_dir();
+}
 
 exit;
 
