@@ -36,9 +36,9 @@ chdir("$root_path/build");
 
 exec("7z a -tzip coldsim-" . VERSION . "-win32.zip coldsim");
 
-if(!rrmdir($root_path . "build/coldsim/php"))
+if(!rrmdir("coldsim/php") || !unlink("coldsim/coldsim.cmd"))
 {
-	die("Failed to remove php directory");
+	die("Failed to prepare linux build directory");
 }
 
 exec("tar -cJf coldsim-" . VERSION . "-linux.tar.xz coldsim");
