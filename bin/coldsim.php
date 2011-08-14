@@ -10,11 +10,7 @@
 
 define("IN_SIM", true);
 define("IN_GAME", true);
-define("VERSION", '1.0');
-
-define('MAX_PLAYER_PLANETS',	0); // Suppress undefined warning
-define('HOST',			'');
-define('WIN_HOST',		stristr(PHP_OS, "win"));
+require($root_path . "lib/common.php");
 
 if(!extension_loaded('php_gtk2') && function_exists('dl'))
 {
@@ -24,15 +20,6 @@ if(!extension_loaded('php_gtk2') && function_exists('dl'))
 if (!class_exists('gtk'))
 {       
         die("Please load the php-gtk2 module in your php.ini\n");
-}
-
-if(!WIN_HOST)
-{
-	if(getenv('LANG') && strpos(getenv('LANG'), '.') && function_exists('ini_set'))
-	{
-		list(, $encoding) = explode('.', getenv('LANG'));
-		ini_set('php-gtk.codepage', $encoding);
-	}
 }
 
 $root_path = get_root_path();
@@ -45,7 +32,6 @@ require($root_path . "lib/class_config.php");
 require($root_path . "lib/functions.php");
 
 set_time_limit(0); // Override class_battle.php value
-@ini_set("memory_limit", -1);
 
 $glade = new GladeXML($root_path . "gui/coldsim.glade");
 $coldsim = new coldsim($glade);

@@ -11,11 +11,7 @@
 
 define("IN_SIM", true);
 define("IN_GAME", true);
-define("VERSION", '1.0');
-
-define('MAX_PLAYER_PLANETS',	0); // Suppress undefined warning
-define('HOST',			'');
-define('WIN_HOST',		stristr(PHP_OS, "win"));
+require($root_path . "lib/common.php");
 
 $root_path = get_root_path();
 
@@ -25,7 +21,6 @@ require($root_path . "lib/coldzone/class_battle.php");
 require($root_path . "lib/class_config.php");
 
 set_time_limit(0); // Override class_battle.php value
-@ini_set("memory_limit", -1);
 
 if($argc < 2)
 {
@@ -64,26 +59,7 @@ file_put_contents(temp_dir() . "csim_" . getmypid(), serialize(
 	)
 ));
 
-function temp_dir()
-{
-	if(substr(sys_get_temp_dir(), strlen(sys_get_temp_dir()) - 1) !== DIRECTORY_SEPARATOR)
-		return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
-	else
-		return sys_get_temp_dir();
-}
-
 exit;
 
-function get_root_path()
-{
-	$current_path = getcwd();
-
-	if(strpos($current_path, 'bin') == strlen($current_path) - 3 || strpos($current_path, 'php') == strlen($current_path) - 3)
-	{
-		return '../';
-	}
-
-	return './';
-}
 
 ?>
