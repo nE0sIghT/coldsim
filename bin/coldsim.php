@@ -10,7 +10,6 @@
 
 define("IN_SIM", true);
 define("IN_GAME", true);
-require($root_path . "lib/common.php");
 
 if(!extension_loaded('php_gtk2') && function_exists('dl'))
 {
@@ -21,6 +20,8 @@ if (!class_exists('gtk'))
 {       
         die("Please load the php-gtk2 module in your php.ini\n");
 }
+
+require($root_path . "lib/common.php");
 
 $root_path = get_root_path();
 

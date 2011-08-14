@@ -7500,6 +7500,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
       <widget class="GtkVBox" id="vbox12">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="border_width">6</property>
         <child>
           <widget class="GtkFrame" id="frame15">
             <property name="visible">True</property>
@@ -7515,6 +7516,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                   <widget class="GtkVBox" id="vbox13">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="spacing">2</property>
                     <child>
                       <widget class="GtkCheckButton" id="store_position">
                         <property name="label" translatable="yes">Запоминать позицию окна</property>
@@ -7571,6 +7573,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                             <property name="width_chars">8</property>
                             <property name="xalign">1</property>
                             <property name="truncate_multiline">True</property>
+                            <property name="invisible_char_set">True</property>
                             <property name="primary_icon_activatable">False</property>
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
@@ -7627,6 +7630,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                   <widget class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="spacing">2</property>
                     <child>
                       <widget class="GtkCheckButton" id="threaded">
                         <property name="label" translatable="yes">Включить расчет в несколько потоков</property>
@@ -7643,7 +7647,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkHBox" id="hbox6">
+                      <widget class="GtkHBox" id="hbox7">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -7669,6 +7673,7 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                             <property name="width_chars">8</property>
                             <property name="xalign">1</property>
                             <property name="truncate_multiline">True</property>
+                            <property name="invisible_char_set">True</property>
                             <property name="primary_icon_activatable">False</property>
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>

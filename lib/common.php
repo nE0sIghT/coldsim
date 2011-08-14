@@ -2,7 +2,7 @@
 /**
 *
 * @package ColdSim
-* @version $Id $
+* @version $Id$
 * @copyright (c) 2010-2011 Yuri nE0sIghT Konotopov, http://coldzone.ru
 * @license GNU Affero General Public License, version 3 http://www.gnu.org/licenses/agpl-3.0.html
 *
@@ -26,6 +26,7 @@ if(!WIN_HOST)
 	if(getenv('LANG') && strpos(getenv('LANG'), '.') && function_exists('ini_set'))
 	{
 		list(, $encoding) = explode('.', getenv('LANG'));
+		echo $encoding;
 		ini_set('php-gtk.codepage', $encoding);
 	}
 }
