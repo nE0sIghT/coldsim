@@ -39,24 +39,4 @@ $glade->signal_autoconnect_instance($coldsim);
 
 Gtk::main();
 
-function temp_dir()
-{
-	if(substr(sys_get_temp_dir(), strlen(sys_get_temp_dir()) - 1) !== DIRECTORY_SEPARATOR)
-		return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
-	else
-		return sys_get_temp_dir();
-}
-
-function get_root_path()
-{
-	$current_path = getcwd();
-
-	if(strpos($current_path, 'bin') == strlen($current_path) - 3 || strpos($current_path, 'php') == strlen($current_path) - 3)
-	{
-		return '../';
-	}
-
-	return './';
-}
-
 ?>
