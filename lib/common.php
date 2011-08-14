@@ -26,21 +26,8 @@ if(!WIN_HOST)
 	if(getenv('LANG') && strpos(getenv('LANG'), '.') && function_exists('ini_set'))
 	{
 		list(, $encoding) = explode('.', getenv('LANG'));
-		echo $encoding;
 		ini_set('php-gtk.codepage', $encoding);
 	}
-}
-
-function get_root_path()
-{
-	$current_path = getcwd();
-
-	if(strpos($current_path, 'bin') == strlen($current_path) - 3 || strpos($current_path, 'php') == strlen($current_path) - 3)
-	{
-		return '../';
-	}
-
-	return './';
 }
 
 function temp_dir()
@@ -50,5 +37,4 @@ function temp_dir()
 	else
 		return sys_get_temp_dir();
 }
-
 ?>

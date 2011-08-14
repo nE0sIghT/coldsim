@@ -11,10 +11,10 @@
 
 define("IN_SIM", true);
 define("IN_GAME", true);
-require($root_path . "lib/common.php");
 
 $root_path = get_root_path();
 
+require($root_path . "lib/common.php");
 require($root_path . "lib/coldzone/constants.php");
 require($root_path . "lib/coldzone/vars.php");
 require($root_path . "lib/coldzone/class_battle.php");
@@ -61,5 +61,15 @@ file_put_contents(temp_dir() . "csim_" . getmypid(), serialize(
 
 exit;
 
+function get_root_path()
+{
+	$current_path = getcwd();
 
+	if(strpos($current_path, 'bin') == strlen($current_path) - 3 || strpos($current_path, 'php') == strlen($current_path) - 3)
+	{
+		return '../';
+	}
+
+	return './';
+}
 ?>

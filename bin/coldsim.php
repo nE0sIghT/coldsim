@@ -21,10 +21,9 @@ if (!class_exists('gtk'))
         die("Please load the php-gtk2 module in your php.ini\n");
 }
 
-require($root_path . "lib/common.php");
-
 $root_path = get_root_path();
 
+require($root_path . "lib/common.php");
 require($root_path . "lib/coldzone/constants.php");
 require($root_path . "lib/coldzone/vars.php");
 require($root_path . "lib/coldzone/class_battle.php");
@@ -40,4 +39,15 @@ $glade->signal_autoconnect_instance($coldsim);
 
 Gtk::main();
 
+function get_root_path()
+{
+	$current_path = getcwd();
+
+	if(strpos($current_path, 'bin') == strlen($current_path) - 3 || strpos($current_path, 'php') == strlen($current_path) - 3)
+	{
+		return '../';
+	}
+
+	return './';
+}
 ?>
