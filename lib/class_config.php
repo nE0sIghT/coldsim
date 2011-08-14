@@ -21,7 +21,7 @@ class config
 		'settings_store_position'	=> 1,
 		'settings_store_game_factor'	=> 1,
 		'settings_simulations'		=> 20,
-		'settings_threaded'		=> 0,
+		'settings_threaded'		=> 1,
 		'settings_threads'		=> 0,
 	);
 	private $data = array();
@@ -65,8 +65,6 @@ class config
 				case "0.4":
 				case "0.5":
 				case "0.5.1":
-					$this->data['threaded']	= 0;
-					$this->data['threads']	= 0;
 			}
 			$this->data['version'] = $this->default['version'];
 		}
