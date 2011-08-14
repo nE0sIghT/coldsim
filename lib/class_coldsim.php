@@ -784,6 +784,31 @@ class coldsim
 		}
 	}
 
+	function results_to_slot()
+	{
+		foreach(vars::get_resources('fleet') as $element)
+		{
+			if($this->glade->get_widget("ship_d_$element"))
+			{
+				$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
+				$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts)) : 0;
+
+				$this->glade->get_widget("ship_d_$element")->set_text($count);
+			}
+		}
+
+		foreach(vars::get_resources('defense') as $element)
+		{
+			if($this->glade->get_widget("defense_$element"))
+			{
+				$counts = isset($this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element]) ? $this->results['ships'][BATTLE_FLEET_DEFENDER][$this->acs_slot]['ships'][$element] : array();
+				$count = sizeof($counts) ? round(array_sum($counts)/sizeof($counts)) : 0;
+
+				$this->glade->get_widget("defense_$element")->set_text($count);
+			}
+		}
+	}
+
 	function change_prime_target($object)
 	{
 		list(,, $this->prime_target) = explode('_', $object->name);
