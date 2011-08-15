@@ -1070,7 +1070,7 @@ class coldsim
 
 		$this->glade->get_widget('files_action_button')->set_label($this->encode('Сохранить'));
 		$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('clicked', array($this, 'save_data'));
-		$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('activate', array($this, 'save_data'));
+		//$this->files_action_signal = $this->glade->get_widget('files_action_button')->connect('activate', array($this, 'save_data'));
 
 		$window->reparent($this->glade->get_widget('window_save'));
 		$window->set_action(Gtk::FILE_CHOOSER_ACTION_SAVE);
