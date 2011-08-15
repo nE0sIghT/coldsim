@@ -14,8 +14,6 @@ if (!defined('IN_GAME'))
 
 ini_set('max_execution_time', '120');
 
-define('BATTLE_VERSION', 0.3);
-
 define('BATTLE_DRAW', -1);
 define('BATTLE_FLEET_ATTACKER', 0);
 define('BATTLE_FLEET_DEFENDER', 1);
@@ -77,7 +75,7 @@ class Battle extends Report
 
 			$this->log('Класс боя создан');
 			$this->log('Cold Zone версия ' . VERSION);
-			$this->log('Модуль боя версия ' . BATTLE_VERSION);
+			$this->log('Модуль боя версия \'$Rev $\'');
 			$this->log('Номера кораблей:');
 			foreach(vars::get_resources('fleet') as $fleet_id)
 			{
