@@ -43,7 +43,7 @@ function get_root_path()
 {
 	$current_path = getcwd();
 
-	if(strpos($current_path, 'bin') == strlen($current_path) - 3 || strpos($current_path, 'php') == strlen($current_path) - 3)
+	if(in_array(basename($current_path), array("bin", "php", "contrib")))
 	{
 		return '../';
 	}

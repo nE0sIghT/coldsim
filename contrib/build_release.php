@@ -18,12 +18,11 @@ require($root_path . "lib/common.php");
 
 if(file_exists($root_path . "build"))
 {
-	if(!rrmdir($root_path . "build"))
+	if(!rrmdir($root_path . "build", true))
 		die("Failed to clean build directory");
 }
-
-if(!mkdir($root_path . "build"))
-	die("Failed to make build directory");
+else if(!mkdir($root_path . "build"))
+	die("Failed to create build directory");
 
 exec("svn export $root_path {$root_path}build/coldsim");
 
@@ -67,7 +66,7 @@ function rrmdir($directory, $empty = false)
 		{
 			if(!in_array($contents, array(".", "..")))
 			{
-				$path = $directory . "/" . $contents;
+				$path = $directory . $contents;
 
 				if(is_dir($path))
 				{

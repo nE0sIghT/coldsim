@@ -27,54 +27,51 @@ define('BATTLE_LOG_FILE',	1);
 
 class Battle extends Report
 {
-	var $original_fleet	= array(); // [fleet_type][fleet_id][element] = count
-	var $fleet		= array(); // [fleet_type][fleet_id][element] = count
-	var $tech		= array(); // [fleet_type][fleet_id][tech] = level
-	var $fleet_count	= array(); // [fleet_type][fleet_id] = count
-					   // [fleet_type]['total']  = count
-	var $fleet_count_real	= array(); // dynamic
+	public $original_fleet		= array(); // [fleet_type][fleet_id][element] = count
+	public $fleet			= array(); // [fleet_type][fleet_id][element] = count
+	public $tech			= array(); // [fleet_type][fleet_id][tech] = level
+	public $fleet_count		= array(); // [fleet_type][fleet_id] = count
+						   // [fleet_type]['total']  = count
+	public $fleet_count_real	= array(); // dynamic
 
-	var $shield		= array(); // [fleet_type][fleet_id][element][hull_percent][shield_percent] = count
-	var $damage_percent	= array(); // [fleet_type][fleet_id][element] = percent
+	public $shield			= array(); // [fleet_type][fleet_id][element][hull_percent][shield_percent] = count
+	public $damage_percent		= array(); // [fleet_type][fleet_id][element] = percent
 
-	var $round		= 0;
-	var $max_rounds		= 6;
+	public $round			= 0;
+	public static $max_rounds	= 6;
 
-	var $round_info		= array();
-	var $users		= array(); // [fleet_type][fleet_id]['username'] = username;
-					   // [fleet_type][fleet_id]['coords'] = coords;
-	var $winner		= -1;
-	var $first_round_loose	= array(); // index = fleet_id
-	var $debris		= array(
-					'total' => array(
-						BATTLE_FLEET_ATTACKER => array(
-							'metal' => 0,
-							'crystal' => 0),
-						BATTLE_FLEET_DEFENDER => array(
-							'metal' => 0,
-							'crystal' => 0)
-					),
-					'nondefence' => array(
-						BATTLE_FLEET_DEFENDER => array(
-							'metal' => 0,
-							'crystal' => 0)
-					),
-					'metal' => 0,
-					'crystal' => 0
+	public $round_info		= array();
+	public $users			= array(); // [fleet_type][fleet_id]['username'] = username;
+						   // [fleet_type][fleet_id]['coords'] = coords;
+	public $winner			= -1;
+	public $first_round_loose	= array(); // index = fleet_id
+	public $debris			= array(
+						'total' => array(
+							BATTLE_FLEET_ATTACKER => array(
+								'metal' => 0,
+								'crystal' => 0),
+							BATTLE_FLEET_DEFENDER => array(
+								'metal' => 0,
+								'crystal' => 0)
+						),
+						'nondefence' => array(
+							BATTLE_FLEET_DEFENDER => array(
+								'metal' => 0,
+								'crystal' => 0)
+						),
+						'metal' => 0,
+						'crystal' => 0
 	);
-	var $moon_chance	= 0;
-	var $errors		= array();
-	var $debug		= false;
-	var $logs		= array();
-	var $log_type		= BATTLE_LOG_FILE;
-	var $log_file		= './class.battle.log';
+	public $moon_chance		= 0;
+	public $errors			= array();
+	private static $debug		= false;
+	public $logs			= array();
+	private static $log_type	= BATTLE_LOG_FILE;
+	private static $log_file	= './class.battle.log';
 
-	function __construct($attacker, $defender, $debug = false)
+	function __construct($attacker, $defender)
 	{
-		if($debug)
-			$this->debug = true;
-
-		if($this->debug)
+		if(self::$debug)
 		{
 			global $lang;
 
@@ -98,14 +95,14 @@ class Battle extends Report
 
 	function __destruct()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Очистка данных...', false);
 		}
 
 		unset($this->fleet, $this->shield);
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Ok');
 		}
@@ -114,7 +111,7 @@ class Battle extends Report
 	function calculate()
 	{
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Подготовка расчета...');
 		}
@@ -127,26 +124,26 @@ class Battle extends Report
 		if($this->round !== 0)
 			$this->clear();
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Копирование флота...', false);
 		}
 
 		$this->fleet = $this->original_fleet;
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Ok');
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Начинаю расчет...');
 		}
 
-		for($this->round = 0; $this->round < $this->max_rounds; $this->round++)
+		for($this->round = 0; $this->round < self::$max_rounds; $this->round++)
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Раунд ' . $this->round);
 			}
@@ -166,7 +163,7 @@ class Battle extends Report
 		}
 
 		$this->get_fleet_count();
-		if($this->round == $this->max_rounds)
+		if($this->round == self::$max_rounds)
 		{
 			$this->battle_ended();
 		}
@@ -174,7 +171,7 @@ class Battle extends Report
 		$this->report_add_fleet();
 		$this->restore_defence();
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Расчет поля обломков...');
 		}
@@ -182,12 +179,12 @@ class Battle extends Report
 		$this->debris['metal'] = round(0.3 * ($this->debris['total'][BATTLE_FLEET_ATTACKER]['metal'] + $this->debris['nondefence'][BATTLE_FLEET_DEFENDER]['metal']));
 		$this->debris['crystal'] = round(0.3 * ($this->debris['total'][BATTLE_FLEET_ATTACKER]['crystal'] + $this->debris['nondefence'][BATTLE_FLEET_DEFENDER]['crystal']));
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($this->debris);
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Расчет шанса на луну...', false);
 		}
@@ -196,7 +193,7 @@ class Battle extends Report
 		if($this->moon_chance > 20)
 			$this->moon_chance = 20;
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($this->moon_chance);
 		}
@@ -204,14 +201,14 @@ class Battle extends Report
 
 	private function battle_ended()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Проверка на конец битвы...', false);
 		}
 
 		if($this->fleet_count[BATTLE_FLEET_ATTACKER]['total'] === 0 || $this->fleet_count[BATTLE_FLEET_DEFENDER]['total'] === 0)
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Да');
 			}
@@ -228,7 +225,7 @@ class Battle extends Report
 		}
 		else
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Нет');
 			}
@@ -238,7 +235,7 @@ class Battle extends Report
 
 	private function calculate_round()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Расчет раунда...');
 		}
@@ -255,7 +252,7 @@ class Battle extends Report
 		$this->remove_broken_ships();
 		$this->fleet_recalculate();
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Раунд расчитан');
 		}
@@ -263,7 +260,7 @@ class Battle extends Report
 
 	private function restore_defence()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Восстановление обороны...');
 		}
@@ -304,7 +301,7 @@ class Battle extends Report
 
 	private function fleet_attack($source_type)
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Атакуют флоты ' . ($source_type == BATTLE_FLEET_ATTACKER ? 'нападающих' : 'обороняющихся'));
 		}
@@ -314,7 +311,7 @@ class Battle extends Report
 		$source = array();
 		foreach($this->fleet[$source_type] as $source['fleet_id'] => $source['ships']) // [fleet_type][fleet_id][element] = count
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Атакует флот ' . $source['fleet_id']);
 			}
@@ -324,7 +321,7 @@ class Battle extends Report
 				// Variables names are ugly
 				$rapidfire = $this->fleet_group_attack($source, $target_type);
 
-				if($this->debug)
+				if(self::$debug)
 				{
 					$this->log('Скорострел...');
 				}
@@ -349,7 +346,7 @@ class Battle extends Report
 					}
 				}
 
-				if($this->debug)
+				if(self::$debug)
 				{
 					$this->log('Скорострел закончен');
 				}
@@ -359,7 +356,7 @@ class Battle extends Report
 
 	private function fleet_group_attack($source, $target_type)
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Атакуют корабли: ' . $source['element']);
 		}
@@ -375,7 +372,7 @@ class Battle extends Report
 			if(!$this->fleet_count_real[$target_type][$target['fleet_id']])
 				continue;
 
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Нападение на флот ' . $target['fleet_id']);
 			}
@@ -385,12 +382,12 @@ class Battle extends Report
 				if(!$source['total_count'] || !$this->fleet_count_real[$target_type][$target['fleet_id']])
 					continue;
 
-				if($this->debug)
+				if(self::$debug)
 				{
 					$this->log('Нападение на корабли ' . $target['element']);
 				}
 
-				if($this->debug)
+				if(self::$debug)
 				{
 					$this->log('Расчет параметров...');
 				}
@@ -405,7 +402,7 @@ class Battle extends Report
 				$target['single_hull']		= ((vars::$params[$target['element']]['metal'] + vars::$params[$target['element']]['crystal']) / 10) * $target['bonus_hull'];
 				$target['single_shield']	= vars::$battle_caps[$target['element']]['shield'] * $target['bonus_shield'];
 
-				if($this->debug)
+				if(self::$debug)
 				{
 					$this->log('Атака нападающего: ' . $source['single_attack']);
 					$this->log('Защита обороняющегося: ' . $target['single_hull']);
@@ -420,7 +417,7 @@ class Battle extends Report
 					if(!$this->fleet_count_real[$target_type][$target['fleet_id']])
 						continue;
 
-					if($this->debug)
+					if(self::$debug)
 					{
 						$this->log('Выбраны ' . $source['hull_count'] . ' кораблей с процентом брони ' . $hull_percent);
 					}
@@ -447,7 +444,7 @@ class Battle extends Report
 					}
 					else
 					{
-						if($this->debug)
+						if(self::$debug)
 						{
 							$this->log('Пропускаем атаку.');
 						}
@@ -486,7 +483,7 @@ class Battle extends Report
 		if($target['count'] == 0 || $source['count'] == 0)
 			return;
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Производим атаку...');
 		}
@@ -496,13 +493,13 @@ class Battle extends Report
 		$target['real_shield'] 	= $target['single_shield'] * $shield_percent / BATTLE_PRECISION;
 		$target['real_hull']	= $target['single_hull'] * $hull_percent / BATTLE_PRECISION;
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Щиты цели: ' . $target['real_shield']);
 			$this->log('Броня цели: ' . $target['real_hull']);
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Проверка на правило неуязвимости...', false);
 		}
@@ -517,7 +514,7 @@ class Battle extends Report
 				print_r($source);
 				echo '<hr /><br />';
 			}*/
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Нет');
 			}
@@ -573,7 +570,7 @@ class Battle extends Report
 		}
 		else
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Да');
 			}
@@ -614,7 +611,7 @@ class Battle extends Report
 
 	private function fleet_explode($fleet_type, $target, $shield_percent, $hull_percent, $attacks = 1)
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Проверка шанса на взрыв...');
 		}
@@ -642,7 +639,7 @@ class Battle extends Report
 						$total_count -= $target['count'];
 						if($target['count'])
 						{
-							if($this->debug)
+							if(self::$debug)
 							{
 								$this->log('Взорваны ' . $target['count'] . ' кораблей');
 							}
@@ -669,7 +666,7 @@ class Battle extends Report
 					$total_count -= $target['count'];
 					if($target['count'])
 					{
-						if($this->debug)
+						if(self::$debug)
 						{
 							$this->log('Взорваны ' . $target['count'] . ' кораблей');
 						}
@@ -681,7 +678,7 @@ class Battle extends Report
 				}
 			}
 		}
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Ок');
 		}
@@ -773,7 +770,7 @@ class Battle extends Report
 
 	private function get_fleet_count()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Считаем кол-во кораблей...');
 		}
@@ -796,7 +793,7 @@ class Battle extends Report
 		}
 
 		$this->fleet_count_real = $this->fleet_count;
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($this->fleet_count);
 		}
@@ -804,7 +801,7 @@ class Battle extends Report
 
 	private function get_target_elements($target_type, $source_count)
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Считаем шанс на попадание по кол-ву кораблей...');
 		}
@@ -878,7 +875,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($return);
 			$this->log('Ок');
@@ -891,7 +888,7 @@ class Battle extends Report
 	{
 		$return = array();
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Считаем шанс на попадание по броне...');
 		}
@@ -980,7 +977,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($return);
 			$this->log('Ок');
@@ -993,7 +990,7 @@ class Battle extends Report
 	{
 		$return = array();
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Считаем шанс на попадание по щитам...');
 		}
@@ -1045,7 +1042,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($return);
 			$this->log('Ок');
@@ -1084,7 +1081,7 @@ class Battle extends Report
 
 	private function regenerate_shield()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Восстанавливаем щиты...', false);
 		}
@@ -1113,7 +1110,7 @@ class Battle extends Report
 				}
 			}
 		}
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Ok');
 		}
@@ -1121,7 +1118,7 @@ class Battle extends Report
 
 	private function remove_broken_ships()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Убираем поломаные корабли...');
 		}
@@ -1155,7 +1152,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Ок');
 		}
@@ -1163,7 +1160,7 @@ class Battle extends Report
 
 	private function fleet_recalculate()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Пересчитываем все флоты...');
 		}
@@ -1193,7 +1190,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($this->fleet);
 			$this->log('Ok');
@@ -1242,7 +1239,7 @@ class Battle extends Report
 
 	private function ready()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Проверяем готовность...', false);
 		}
@@ -1253,7 +1250,7 @@ class Battle extends Report
 			!empty($this->tech[BATTLE_FLEET_DEFENDER])
 		)
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Ok');
 			}
@@ -1261,7 +1258,7 @@ class Battle extends Report
 		}
 		else
 		{
-			if($this->debug)
+			if(self::$debug)
 			{
 				$this->log('Ошибка');
 			}
@@ -1271,7 +1268,7 @@ class Battle extends Report
 
 	private function fill_fleet($fleets, $fleet_type)
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Заполняем флоты ' . ($fleet_type == BATTLE_FLEET_ATTACKER ? 'нападающих' : 'обороняющихся') . '...', false);
 		}
@@ -1304,7 +1301,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Сделано');
 		}
@@ -1312,7 +1309,7 @@ class Battle extends Report
 
 	private function check_first_round_loosers()
 	{
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log('Проверяем проигравших в первом раунде...');
 		}
@@ -1326,7 +1323,7 @@ class Battle extends Report
 			}
 		}
 
-		if($this->debug)
+		if(self::$debug)
 		{
 			$this->log($this->first_round_loose);
 			$this->log('Ok');
@@ -1353,9 +1350,9 @@ class Battle extends Report
 			$str .= "\n";
 		}
 
-		if($this->log_type == BATTLE_LOG_FILE)
+		if(self::$log_type == BATTLE_LOG_FILE)
 		{
-			file_put_contents($this->log_file, $str, FILE_APPEND);
+			file_put_contents(self::$log_file, $str, FILE_APPEND);
 		}
 		else
 		{
@@ -1366,12 +1363,12 @@ class Battle extends Report
 
 class Report
 {
-	var $fleet	= array(); // [fleet_type][fleet_id][element] = count
-	var $tech	= array();
-	var $round	= 0;
-	var $report	= array();
-	var $users	= array();
-	var $html	= '';
+	public $fleet		= array(); // [fleet_type][fleet_id][element] = count
+	public $round		= 0;
+	public $tech		= array();
+	public $report		= array();
+	public $users		= array();
+	public $html		= '';
 
 	protected function report_add_fleet()
 	{
@@ -1398,7 +1395,7 @@ class Report
 		$this->report[$this->round]['shield'][$target_type] += $target_shield;
 	}
 
-	function generate_report($metal = 0, $crystal = 0, $deuterium = 0, $battle_time = 0, $is_moon = false, $moon_destroyed = false)
+	public function generate_report($metal = 0, $crystal = 0, $deuterium = 0, $battle_time = 0, $is_moon = false, $moon_destroyed = false)
 	{
 		global $lang;
 

@@ -375,9 +375,7 @@ class coldsim
 			if(WIN_HOST)
 				$cpus = (int) getenv("NUMBER_OF_PROCESSORS");
 			else
-			{
 				$cpus = (int) exec("cat /proc/cpuinfo | grep -c processor");
-			}
 
 			return max(1, $cpus);
 		}
@@ -516,6 +514,8 @@ class coldsim
 		else
 		{
 			$this->completed_simulations = 0;
+			$this->simulation_threads_return = array();
+
 			while($this->completed_simulations + sizeof($this->simulation_threads) < $this->simulations)
 			{
 				if(sizeof($this->simulation_threads) < $this->simulation_threads_count())
@@ -526,6 +526,11 @@ class coldsim
 				{
 					$this->check_simulation_threads();
 				}
+			}
+
+			while($this->completed_simulations < $this->simulations)
+			{
+				$this->check_simulation_threads();
 			}
 
 			foreach($this->simulation_threads_return as $battle)
