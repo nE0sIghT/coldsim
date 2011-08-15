@@ -55,6 +55,7 @@ file_put_contents(temp_dir() . "csim_" . getmypid(), serialize(
 		'winner'		=> $battle->winner,
 		'debris'		=> $battle->debris,
 		'moon_chance'		=> $battle->moon_chance,
+		'rounds'		=> $battle->round,
 		'calculate_time'	=> $calculate_time,
 	)
 ));
