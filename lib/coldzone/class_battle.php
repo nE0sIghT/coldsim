@@ -75,7 +75,7 @@ class Battle extends Report
 
 			$this->log('Класс боя создан');
 			$this->log('Cold Zone версия ' . VERSION);
-			$this->log('Модуль боя версия $Rev $');
+			$this->log('Модуль боя версия $Rev$');
 			$this->log('Номера кораблей:');
 			foreach(vars::get_resources('fleet') as $fleet_id)
 			{
