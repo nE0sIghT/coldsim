@@ -1409,7 +1409,13 @@ class coldsim
 	function store_position()
 	{
 		if($this->config->get_setting('store_position'))
-			$this->config->set('position', implode(',', $this->glade->get_widget('window_main')->get_position()));
+		{
+			$this->config->set('position', array_map(
+				create_function('$num', 'return max(0, $num);'),
+				implode(',', $this->glade->get_widget('window_main')->get_position())
+				)
+			);
+		}
 	}
 
 	function quit_button_clicked()
