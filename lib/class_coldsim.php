@@ -1129,6 +1129,17 @@ class coldsim
 							$this->results = $data['results'];
 							$this->fleets = $data['fleets'];
 
+							if($data['version'] >= 1.1)
+							{
+								$this->glade->get_widget("target_galaxy")->set_text((int) $data['target']['galaxy']);
+								$this->glade->get_widget("target_system")->set_text((int) $data['target']['system']);
+								$this->glade->get_widget("target_planet")->set_text((int) $data['target']['planet']);
+
+								$this->glade->get_widget("source_galaxy")->set_text((int) $data['source']['galaxy']);
+								$this->glade->get_widget("source_system")->set_text((int) $data['source']['system']);
+								$this->glade->get_widget("source_planet")->set_text((int) $data['source']['planet']);
+							}
+
 							$this->store_current_acs();
 							$this->show_ships_results();
 						}
@@ -1142,6 +1153,8 @@ class coldsim
 
 	function save_data()
 	{
+		$this->store_current_acs("acs_combobox", true);
+
 		$filename = $this->glade->get_widget('window_files')->get_filename();
 
 		if($this->glade->get_widget('files_combobox')->get_active() == 0 && substr(strrchr($filename, '.'), 1) != 'csim')
@@ -1161,6 +1174,16 @@ class coldsim
 			'version'	=> VERSION,
 			'results'	=> $this->results,
 			'fleets'	=> $this->fleets,
+			'target'	=> array(
+					'galaxy'	=> (int) $this->glade->get_widget("target_galaxy")->get_text(),
+					'system'	=> (int) $this->glade->get_widget("target_system")->get_text(),
+					'planet'	=> (int) $this->glade->get_widget("target_planet")->get_text(),
+			),
+			'source'	=> array(
+					'galaxy'	=> (int) $this->glade->get_widget("source_galaxy")->get_text(),
+					'system'	=> (int) $this->glade->get_widget("source_system")->get_text(),
+					'planet'	=> (int) $this->glade->get_widget("source_planet")->get_text(),
+			),
 		);
 
 		if(!$this->glade->get_widget('save_results')->get_active())

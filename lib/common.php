@@ -13,7 +13,7 @@ if (!defined('IN_SIM'))
 	exit;
 }
 
-define('VERSION', '1.0');
+define('VERSION', '1.1');
 
 define('MAX_PLAYER_PLANETS',	0); // Suppress undefined warning
 define('HOST',			'');
