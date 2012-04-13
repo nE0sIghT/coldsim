@@ -11,7 +11,7 @@
     <property name="type_hint">normal</property>
     <property name="transient_for">window_main</property>
     <property name="program_name">ColdSim</property>
-    <property name="copyright">Copyright (C) 2010-2011 nE0sIghT</property>
+    <property name="copyright">Copyright (C) 2010-2012 nE0sIghT</property>
     <property name="comments" translatable="yes">Свободный симулятор боя Cold Zone</property>
     <property name="website">http://coldzone.ru</property>
     <property name="license">                    GNU AFFERO GENERAL PUBLIC LICENSE
@@ -1198,6 +1198,9 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                                 <property name="top_attach">6</property>
                                 <property name="bottom_attach">7</property>
                               </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                             <child>
                               <placeholder/>
@@ -2510,6 +2513,9 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                             <property name="top_attach">14</property>
                             <property name="bottom_attach">15</property>
                           </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                         <child>
                           <placeholder/>
@@ -4866,6 +4872,9 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                             <child>
                               <placeholder/>
                             </child>
+                            <child>
+                              <placeholder/>
+                            </child>
                           </widget>
                         </child>
                       </widget>
@@ -5773,6 +5782,9 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                                 <child>
                                   <placeholder/>
                                 </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </widget>
                               <packing>
                                 <property name="expand">True</property>
@@ -6229,6 +6241,9 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_EXPAND</property>
                               </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                             <child>
                               <placeholder/>
@@ -7073,6 +7088,9 @@ nE0sIghT &lt;admin@coldzone.ru&gt;</property>
                                     <property name="top_attach">3</property>
                                     <property name="bottom_attach">4</property>
                                   </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>
